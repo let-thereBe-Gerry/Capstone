@@ -1,0 +1,506 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel = 'stylesheet' href = {% static 'sb-admin-2.min.css' %}>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    {% comment %} <script src='{% static 'index.global.js' %}'></script> {% endcomment %}
+    <!-- any changes in the calendar.js does not affect here, why? -->
+    {% comment %} <script src='{% static 'calendar.js' %}'></script> {% endcomment %}
+
+    <title>Dashboard</title>
+
+    <!-- Custom fonts for this template-->
+    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+
+
+    <style>        
+        .inner-box {
+          border: 1px solid #ddd;
+          padding: 15px;
+          margin-top: 10px;
+          color: black
+        }
+    
+        /* Style for buttons */
+        .button {
+          display: inline-block;
+          padding: 8px 15px;
+          margin-right: 10px;
+          cursor: pointer;
+          border: none;
+          border-radius: 20px;
+        }
+
+        #accept_btn{
+          background-color: #4CAF50;
+          color: black;
+
+        }
+
+        #decline_btn{
+          background-color: #ff0000;
+          color: white;
+
+        }
+
+        #appointments-container {
+            max-height: 808px; /* Set the maximum height according to your design */
+            overflow-y: auto; /* Enable vertical scrollbar when content exceeds the height */
+        }
+
+        #today-appointments-container {
+            max-height: 250px; /* Set the maximum height according to your design */
+            overflow-y: auto; /* Enable vertical scrollbar when content exceeds the height */
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            {% comment %} margin-top: 20px;  {% endcomment %}
+          }
+        
+          th, td {
+            padding: 10px;  /* Add padding to th and td for spacing */
+            text-align: center;
+            {% comment %} border: 1px solid #ddd; {% endcomment %}
+          }
+
+        ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        {% comment %} background-color: #333; {% endcomment %}
+        }
+        
+        .head-nav {
+        float: left;
+        }
+        
+        .head-nav a {
+        display: block;
+        color: Gray;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+        }
+        
+        .head-nav a:hover {
+        background-color: #3e64d3;
+        color: white;
+        }
+        .messaging {
+            margin: 0 auto;
+            max-width: 800px;
+            padding: 0 20px;
+            max-height: 650px;
+            overflow: auto;
+        }
+        
+        .message-container {
+            border: 2px solid #dedede;
+            {% comment %} background-color: #E5E5E5; {% endcomment %}
+            {% comment %} border-color: red; {% endcomment %}
+            border-radius: 5px;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        
+        .left {
+            display: block;
+            text-align: left !important;            
+            padding-left: 10px;
+            color: white;
+            border-color: #E5E5E5;                
+            border-radius: 13px;                
+            {% comment %} background-color: #031F85; {% endcomment %}
+            background-color: #82CA88;
+
+        }
+        
+        .reciever {            
+            display: block;
+            text-align: right !important; 
+            color: black;
+            border-radius: 13px;   
+            {% comment %} border-color: red; {% endcomment %}
+            background-color: #E2E2E2;
+        }
+        
+        .message-container::after {
+            content: "";
+            clear: both;
+            display: table;
+
+        }
+
+        .time-left {
+            color: #EDEDED;
+            display: block; 
+            text-align: right !important;
+        }
+
+        .time-right {
+            color: #EDEDED;
+            display: block; 
+            text-align: left !important;
+        }
+
+        .container {
+            margin-bottom: 10px; 
+        }
+
+        {% comment %}  {% endcomment %}
+        input[type=text], select {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            }
+        
+            input[type=submit] {
+            width: 100%;
+            background-color: #4CAF50;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            }
+        
+            input[type=submit]:hover {
+            background-color: #45a049;
+            }
+        
+            {% comment %} div { {% endcomment %}
+            .form {
+            border-radius: 5px;
+            background-color: #f2f2f2;
+            padding: 20px;
+            }
+
+    </style>
+
+    </head>
+
+<body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+            <!-- Sidebar - Brand -->
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{% url 'index'%}">
+                <div class="sidebar-brand-icon rotate-n-15">
+                    <i class="fas fa-laugh-wink"></i>
+                </div>
+                <div class="sidebar-brand-text mx-3">EyeLuc </div>
+            </a>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider"> <!-- Ito yung parang may dash -->
+
+            <li class="nav-item active">
+                <a class="nav-link" href="{%url 'dashboard' %}">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Dashboard</span></a>
+            </li>
+
+{% comment %} ILALAGAY NA LANG ITO DUN SA CLINICAL Statistics
+            <li class="nav-item active"> 
+                <a class="nav-link" href="">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Feedback</span></a>
+            </li> {% endcomment %}
+
+            <hr class="sidebar-divider">
+
+            <li class="nav-item active">
+                <a class="nav-link" href="">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Facebook Pages</span></a>
+            </li>
+
+            <hr class="sidebar-divider">
+
+            <li class="nav-item active">
+                <a class="nav-link" href="{%url 'clinic_services' %}">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Services</span></a>
+            </li>
+            
+            <hr class="sidebar-divider">
+
+            <li class="nav-item active">
+                <a class="nav-link" href="{%url 'clinic_dashboard_profile' %}">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Profile</span></a>
+            </li>
+            
+            <hr class="sidebar-divider">
+
+            <li class="nav-item active">
+                <a class="nav-link" href="{%url 'clinic_patintTables' %}"> 
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Table</span></a> <!-- Dito nakalagay yung mga current at past na naging patient -->
+            </li>
+            
+            <hr class="sidebar-divider">
+
+            <li class="nav-item active">
+                <a class="nav-link" href="{%url 'clinic_messages' %}"> 
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Messages</span></a> 
+            </li>
+            
+            <hr class="sidebar-divider">
+            
+            <!-- Sidebar Toggler (Sidebar) -->
+            <div class="text-center d-none d-md-inline">
+                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+            </div>
+        </ul>
+        <!-- End of Sidebar -->        
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">                    
+                    <!-- Topbar Navbar -->
+                    <ul class="navbar-nav ml-auto">
+                                               
+                        <!-- Nav Item - User Information -->
+                        <li class="nav-item dropdown no-arrow">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Name of the Client</span>
+                                <img class="img-profile rounded-circle"
+                                    src="img/undraw_profile.svg">
+                            </a>
+                            <!-- Dropdown - User Information -->
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                aria-labelledby="userDropdown">
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Profile
+                                </a>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Settings
+                                </a>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Activity Log
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Logout
+                                </a>
+                            </div>
+                        </li>
+                    </ul>
+                </nav>
+                <!-- End of Topbar -->
+
+
+                <td><h2>{{ clinicXOpth.clinicID }}</h2></td>  <!-- For Debugging Only -->
+                
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid messaging">
+                    <div class="row">                        
+                        <div class="col-md "> 
+                            <div class="card shadow mb " >
+    
+                                <div class="card-header flex-row align-items-center ">
+                                    <h4>Welcome: {{cRoom}}</h4>
+                                    <h4>Username: {{username}}</h4> 
+    
+                                    <div id="display">
+    
+                                        <div class="message-container darker">
+                                        <h3>This is a message container</h3>
+                                        </div>     
+    
+                                    </div>
+    
+                                    <div class="message-container">
+    
+                                        <form id="post-form">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="name" id="name" value="{{username}}"/> 
+                                            <input type="hidden" name="patient_ID" id="patient_ID" value="{{paID}}"/> 
+                                            <input type="hidden" name="room_id" id="room_id" value="{{room_details.chatRoomName}}"/> 
+                                            <input type="text" name="message" id="message" />
+                                            <input type="submit" value="Send">
+                                        </form>    
+                                    </div>     
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.container-fluid -->
+                
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright &copy; Your Website 2021</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
+ 
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper --> 
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">X</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+ 
+    <script src='{% static 'index.global.js' %}'></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+    <script type="text/javascript">        
+        $(document).ready(function(){
+        setInterval(function(){
+
+            var cRoom =  "{{ cRoom }}";
+
+            console.log("Print Room: " + cRoom) // nakukuha ito
+
+            $.ajax({
+                type: 'POST',
+                url: '/' + cRoom + '/mark_messages_as_read_Clini/',
+                data: {
+                    cRoom: cRoom,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                success: function(response) {
+                    console.log("Success:", response);
+                    // Handle success if needed
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error:", error);
+                    // Handle error if needed
+                }
+            });
+
+
+            $.ajax({
+                type: 'GET',
+                url : "/getMessages_Clinic/{{cRoom}}/",
+                success: function(response){
+                    console.log(response);
+                    $("#display").empty();
+
+                    for (var key in response.messages) {
+                            var user = response.messages[key].user;
+                            var label = response.messages[key].label;
+
+                            var sender = response.messages[key].sender;
+                            var theSender = response.messages[key].theSender;
+                            var reciever = response.messages[key].clinicSender;
+                            if (sender == theSender){
+                                var temp = "<div class='darker left'><span class='time-right'><p>"
+                                    + response.messages[key].date +
+                                    "</p></span><b>"
+                                    + label +
+                                    "</b><p>"
+                                    + response.messages[key].messageContent +    
+                                    "</p></div>";
+                                $("#display").append(temp);
+                            } else {
+                                var temp = "<div class='container reciever'><span class='time-left'><p>"
+                                    + response.messages[key].date +
+                                    "</p></span><b>"
+                                    + label +
+                                    "</b><p>"
+                                    + response.messages[key].messageContent +
+                                    "</p></div>";
+                                $("#display").append(temp);
+                            }                            
+                        }                    
+                },
+                error: function(response){
+                    alert('An error occured')
+                } 
+            });
+        },100);
+        })               
+
+        var hiddenValue = document.getElementById("name").value;
+        var roomID = document.getElementById("room_id").value;
+        console.log("User: ", hiddenValue);
+        console.log("Room: ", roomID);
+        $(document).on('submit','#post-form',function(e){
+        e.preventDefault();
+        $.ajax({
+            type:'POST',
+            url:'/send_Clinic',
+            data:{
+                username:$('#name').val(),
+                room_id:$('#room_id').val(),
+                message:$('#message').val(),
+                patient_ID:$('#patient_ID').val(),
+            csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+            },
+            success: function(data){
+            }
+        });
+        document.getElementById('message').value = ''
+        });
+    </script>
+
+</body>
+
+</html>

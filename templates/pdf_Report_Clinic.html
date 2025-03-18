@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Patient Data Report</title>
+    
+    <script src="https://cdn.anychart.com/releases/8.10.0/js/anychart-core.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/8.10.0/js/anychart-pie.min.js"></script>
+    
+    <!-- Bootstrap CSS -->
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            {% comment %} border-left: 4px solid #3157c8; {% endcomment %}
+            {% comment %} border: 1px solid black; {% endcomment %}
+            border-bottom: 1px solid black;
+
+            {% comment %} backgroundi[a[aw: 0 0 1px #3157c8; {% endcomment %}
+        }
+        
+        th, td {
+            {% comment %} padding: 5px; {% endcomment %}
+            padding-bottom: 1px;  
+            text-align: left;
+            box-shadow: 0 0 1px #3157c8;
+            {% comment %} border: 1px solid red; {% endcomment %}
+        }
+
+        th {
+            {% comment %} padding: initial; {% endcomment %}
+            background: #3157c8;
+            color: white;
+            border: 1px solid black;
+        }
+
+        td {
+            {% comment %} text-align: center; {% endcomment %}
+
+        }
+
+        tr{
+            margin: 4px;
+            {% comment %} box-shadow: 0 0 1px #3157c8; {% endcomment %}
+        }
+
+        {% comment %} th {
+            background: gray;
+            color: white;
+            border-right: 1px solid #3157c8;           
+        } {% endcomment %}
+
+        .title {
+            {% comment %} padding: 5px 8px; {% endcomment %}
+            background: #3157c8;
+            color: white;
+            {% comment %} border-right: 1px solid #3157c8; {% endcomment %}
+            {% comment %} font-weight: bold; {% endcomment %}
+            font-size: large; 
+            text-align: center;
+
+        }
+
+        .Head {
+            display: flex;
+            justify-content: space-between; /* This will push the h1 elements to opposite ends */
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .Head h1 {
+            margin: 0; /* Remove default margin */
+        }
+
+        .encl {
+            width: 250px ; 
+            height: 200px; 
+            margin: 0; 
+            {% comment %} padding: 8; {% endcomment %}
+            min-height: 250px; 
+            border: 3px round blue;
+            background: red;
+            align-item: center;
+        }
+
+
+        .clinicNames { 
+            margin: 0; 
+            padding: 1;
+            min-height: 250px; 
+            border: 1px round black;
+            background: green;    
+            align-item: center;
+            position: fixed; 
+        }
+
+        .insight {
+            text-align: center;
+            {% comment %} border-left: 1px solid black; {% endcomment %}
+        }
+        
+        
+
+        {% comment %} .services {
+            max-width: 100%;
+            max-height: 100%; 
+            position: absolute; 
+            top: 0;
+            left: 0; 
+            width: auto;
+            height: auto; 
+            background: green;
+        } {% endcomment %}
+
+        .horizontal-list ul {
+            padding: 0;
+            list-style-type: none;
+          }
+          
+          .horizontal-list li {
+            display: inline-block;
+            margin-right: 10px; /* Adjust the spacing between list items */
+          }
+
+          .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    
+        .clinic-id {
+            margin-left: auto; /* Pushes the Clinic ID to the right */
+            text-align: right;
+        }
+    
+        .container {
+            display: flex;
+            justify-content: space-between;
+        }
+        /* Style for the h1 element */
+        h1 {
+            margin: 0;
+        }
+        /* Style for the span element */
+        .right-align {
+            font-style: italic;
+            font-weight: thin;
+            font-size: 12px;
+            text-align: right;
+        }
+
+
+        @page {
+            size : Legal portrait;
+
+            @frame content_frame {
+                left : 20pt;
+                right : 20pt;
+                top : 20pt;
+                bottom : 20pt;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header-container">
+        {% comment %} <h1>Eye Luc <span style="font-style: italic; text-align: right">Clinic ID: {{ clinic.clinicID }}</span></h1> {% endcomment %}
+        <div class="container">
+            <h1>Eye Luc</h1>
+            <span class="right-align">Clinic ID: {{ clinic.clinicID }}</span>
+        </div>
+
+        {% comment %} <p class="clinic-id"><span style="font-style: italic;">Clinic ID: {{ clinic.clinicID }}</span></p> {% endcomment %}
+    </div>
+
+    <div id="wrapper">
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+            <!-- Main Content -->
+            <div id="content">
+                <div class="container-fluid">
+
+                    <div class="clinicNames">
+                        <table style = "margin-bottom: 10px;">
+                            <tr>
+                                <th colspan = '4'><h1> Clinic Profile </h1></th>
+                            </tr>
+
+                            <tr>
+                                <td class = "label" > Clinic Name: </td>
+                                
+                                <td><h1> <span style = "font-style: italic"> {{ clinic }} </span> </h1> </span> </h1></td>
+                                
+                                <td class = "label"> Assigned Opthalmotrist: </td>
+                                <td> <h1> <span style = "font-style: italic"> {{ clinic.opthID }} </span> </h1> </span> </h1> </td>
+                            </tr>
+
+                            <tr>
+                                <td class = "label"> Clinic Contact Number: </td>
+                                <td> <h1> <span style = "font-style: italic"> {{ clinic.clinicNumber }} </span> </h1> </span> </h1> </td>
+                                <td class = "label"> Clinic Email Add.: </td>
+                                <td> <h1> <span style = "font-style: italic"> {{ clinic.clinicEMailAdd }} </span> </h1> </span> </h1> </td>
+                            </tr>
+
+                            <tr>
+                                <td class = "label"> Clinic Address: </td>
+                                <td colspan = '3'> <h3> <span style = "font-style: italic"> {{ clinic.clinicAddress }} </span> </h3> </span> </h1> </td>
+                            </tr>
+
+                        </table >
+
+                        <table>
+                            <tr>
+                                <th colspan = '2'><h1> Most Requested Services </h1></th>
+                            </tr>
+                        </table>
+                        <div class="encl">
+                            <div class="services">   
+                                <table style = "margin-bottom: 10px;">
+                                    <tr>
+                                        <td><img id="services" src="data:image/png;base64,{{ chart_image }}" alt="Chart"></td>
+                                        <td class="insight" style = "border-left: 1px solid black;" > Based on the analysis of the most requested services data, it was found that the <span style = "font-style: italic; font-weight: bold;"> {{ highest_service }} </span> </h3> </span> is the most sought-after 
+                                            service among all the services offered by the clinics. This suggests a potentially high prevalence of  <span style = "font-style: italic; font-weight: bold;"> {{ highest_service }} </span> </h3> </span> in the population or a strong demand for this particular 
+                                            diagnostic service. Understanding the reasons behind this and how it aligns with overall patient needs could help in optimizing service offerings and improving patient satisfaction. </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <table>
+                            <tr>
+                                <th colspan = '2'><h1> Clinic's Number of Patient Every Month </h1></th>
+                            </tr>
+                        </table>
+                        <div class="encl">
+                            <div class="services">   
+                                <table style = "margin-bottom: 10px;">
+                                    <tr style = "margin-bottom: 20px">
+                                        <td><img id="appointments_bar" src="data:image/png;base64,{{ appointments_bar_chart }}" alt="Chart"></td>
+                                    </tr>
+                                    <tr style = "height: 60px">
+                                        <td class="insight"> it is evident that there is a notable fluctuation in the number of appointments the clinic received each month from the last year to 
+                                            today's year. The clinic experienced a significant increase in appointments in  <span style = "font-style: italic; font-weight: bold;"> {{ highest_month }} </span> </h3> </span> compared to the previous months, indicating a potential surge in demand for their 
+                                            services during that period.The months with zero or very few appointments 
+                                            <div class="horizontal-list">
+                                                 <ul>
+                                                 ( {% for month, count in lowest %}
+                                                    <li>{{ month }}: {{ count }} appointments</li>
+                                                  {% endfor %} )
+                                                </ul> 
+                                              </div> 
+                                            could indicate potential downtimes or factors affecting patient engagement or clinic operations during those months. </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <table>
+                            <tr>
+                                <th colspan = '2'><h1> Top 10 patient demographics </h1></th>
+                            </tr>
+                        </table>
+                        <div class="encl" style = "margin-bottom: 20px">
+                            <div class="services">   
+                                <table>
+                                    <tr style = "margin-bottom: 20px">
+                                        <td><img id="appointments_bar" src="data:image/png;base64,{{ patientDemographic_bar_chart }}" alt="Chart"></td>
+                                    </tr>
+                                    <tr style = "height: 60px">
+                                        <td class="insight"> Based on the data for the optical clinic, it is interesting to note that the distribution of patients across 
+                                            different barangays varies. <span style = "font-style: italic; font-weight: bold;"> {{ max_address }} </span> </h3> </span>has the highest number of patients, which could indicate a higher demand or 
+                                            accessibility of optical services in that area. Understanding the demographics and specific eyecare needs of each barangay could 
+                                            help the clinic tailor its services and outreach efforts to better serve these communities. </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+
+                        <table>
+                            <tr>
+                                <th colspan = '2'><h1> Clinic Rating </h1></th>
+                            </tr>
+                        </table>
+                        <div class="encl">
+                            <div class="services">   
+                                <table>
+                                    <tr style = "margin-bottom: 20px">
+                                        <td><img id="appointments_bar" src="data:image/png;base64,{{ pie_ChartRating }}" alt="Chart"></td>
+                                        <td class="insight" style = "border-left: 1px solid black;" >Upon reviewing the clinic's rating data, it's evident that there some lower feedback from patients. 
+                                            This suggests a potential lack of engagement with the rating system or a low rate of patient feedback overall. Encouraging greater participation from patients to 
+                                            provide feedback and ratings could offer valuable insights into patient satisfaction levels and areas for potential improvement. Moreover, increasing the number of 
+                                            ratings can contribute to enhancing the clinic's online reputation and attracting a broader patient base.</td>
+
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+
+
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

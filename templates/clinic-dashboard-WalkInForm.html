@@ -1,0 +1,541 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel = 'stylesheet' href = {% static 'sb-admin-2.min.css' %}>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    {% comment %} <script src='{% static 'index.global.js' %}'></script> {% endcomment %}
+    <!-- any changes in the calendar.js does not affect here, why? -->
+    {% comment %} <script src='{% static 'calendar.js' %}'></script> {% endcomment %}
+
+    <title>Walk In</title>
+
+    <!-- Custom fonts for this template-->
+    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+
+
+    <style>        
+        {% comment %} body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+          } {% endcomment %}
+      
+          form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            {% comment %} box-shadow: 0 6px 15px #3059c8; {% endcomment %}
+            display: flex;
+            flex-wrap: wrap;
+          }
+      
+          .form-group {
+            width: 48%; /* Adjust width as needed */
+            margin-right: 2%; /* Adjust margin as needed */
+            box-sizing: border-box;
+          }
+      
+          label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+          }
+      
+          input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+          }
+      
+          select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+          }
+      
+          button {
+            background-color: #4caf50;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+          }
+      
+          button:hover {
+            background-color: #45a049;
+          }
+
+        ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        }
+        
+        .head-nav {
+        float: left;
+        }
+        
+        .head-nav a {
+        display: block;
+        color: Gray;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+        }
+        
+        .head-nav a:hover {
+        background-color: #3e64d3;
+        color: white;
+        }
+
+
+
+        {% comment %} DROPDOWN {% endcomment %}
+
+        .dropbtn {
+            background-color: #04AA6D;
+            color: white;
+            padding: 16px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+          }
+          
+          .dropbtn:hover, .dropbtn:focus {
+            background-color: #3e8e41;
+          }
+          
+          #myInput {
+            box-sizing: border-box;
+            background-image: url('searchicon.png');
+            background-position: 14px 12px;
+            background-repeat: no-repeat;
+            font-size: 16px;
+            padding: 14px 20px 12px 45px;
+            border: none;
+            border-bottom: 1px solid #ddd;
+          }
+          
+          #myInput:focus {outline: 3px solid #ddd;}
+          
+          .dropdown {
+            position: relative;
+            display: inline-block;
+          }
+          
+          .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f6f6f6;
+            min-width: 230px;
+            overflow: auto;
+            border: 1px solid #ddd;
+            z-index: 1;
+          }
+          
+          .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+          }
+          
+          .dropdown a:hover {background-color: #ddd;}
+          
+          .show {display: block;}
+
+
+      </style>
+
+    </head>
+
+<body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+            <!-- Sidebar - Brand -->
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{% url 'index'%}">
+                <div class="sidebar-brand-icon rotate-n-15">
+                    <i class="fas fa-laugh-wink"></i>
+                </div>
+                <div class="sidebar-brand-text mx-3">EyeLuc </div>
+            </a>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider"> <!-- Ito yung parang may dash -->
+
+            <li class="nav-item active">
+                <a class="nav-link" href="{%url 'dashboard' %}">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Dashboard</span></a>
+            </li>
+
+            <hr class="sidebar-divider">
+
+            <li class="nav-item active">
+                <a class="nav-link" href="">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Facebook Pages</span></a>
+            </li>
+
+            <hr class="sidebar-divider">
+
+            <li class="nav-item active">
+                <a class="nav-link" href="{%url 'clinic_services' %}">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Services</span></a>
+            </li>
+            
+            <hr class="sidebar-divider">
+
+            <li class="nav-item active">
+                <a class="nav-link" href="{%url 'clinic_dashboard_profile' %}">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Profile</span></a>
+            </li>
+            
+            <hr class="sidebar-divider">
+
+            <li class="nav-item active">
+                <a class="nav-link" href="{%url 'clinic_patintTables' %}"> 
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Table</span></a>
+            </li>
+            
+            <hr class="sidebar-divider">
+
+            <li class="nav-item active">
+                <a class="nav-link" href="{%url 'clinic_messages' %}"> 
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Messages</span></a> 
+            </li>
+            
+            <hr class="sidebar-divider">
+            
+            <!-- Sidebar Toggler (Sidebar) -->
+            <div class="text-center d-none d-md-inline">
+                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+            </div>
+        </ul>
+        <!-- End of Sidebar -->         
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                    {% comment %} <h3>{{ clinic_name }}</h3>  <!-- For Debugging Only --> {% endcomment %}
+                    <ul>
+                        <li class = "head-nav"><a href="{%url 'dashboard' %}">General</a></li>
+                        {% comment %} <li class = "head-nav"><a href="{%url 'clinic_dash_curS' %}">Current Sesion</a></li> {% endcomment %}
+                        {% comment %} <li class = "head-nav"><a href="{%url 'clinic_dashboard_notes' %}">Clinical Notes</a></li> {% endcomment %}
+                        <li class = "head-nav"><a href="{%url 'clinic_dashboard_Stats' %}">Clinical Statistics</a></li> <!-- Nakalagay dito yung Monthly statistics kung ilang patient ang nag papa appoint sa kanila, kung sinong patient ang kadalasan nag papa appoint, at yung ratings pa pala, shittt -->
+                        <li class = "head-nav"><a href="{%url 'clinic_dashboard_walkInForm' %}">Walk In</a></li>
+                        {% comment %} <li><a href="#about">About</a></li> {% endcomment %}
+                    </ul>
+                    
+                    <!-- Topbar Navbar -->
+                    <ul class="navbar-nav ml-auto">
+                                               
+                        <!-- Nav Item - User Information -->
+                        <li class="nav-item dropdown no-arrow">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Name of the Client</span>
+                                <img class="img-profile rounded-circle"
+                                    src="img/undraw_profile.svg">
+                            </a>
+                            <!-- Dropdown - User Information -->
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                aria-labelledby="userDropdown">
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Profile
+                                </a>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Settings
+                                </a>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Activity Log
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Logout
+                                </a>
+                            </div>
+                        </li>
+                    </ul>
+                </nav>
+                <!-- End of Topbar -->
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid"> 
+                    
+                    <div class="row">
+                        <div class="col-xl col-lg-">
+                            <div class="card shadow mb-4">
+
+                                <div
+                                    class="card-header py-3 ">
+                                    <h1 class="m-0 font-weight-bold text-primary">Patient Personal Information Data</h1>
+                                    <!-- The dropdown are deleted -->
+                                </div>
+                                <div class="card-body" ><!-- the length should have a limit and can have a scrool bar for other -->
+
+                                    <form id="submitDropDown" method="post" action="{% url 'checkPatientInformation' %}">
+                                        {% csrf_token %}
+                                        <div class="dropdown">
+                                            <button onclick="myFunction()" class="dropbtn">Search Patient Name</button>
+                                            <div id="myDropdown" class="dropdown-content">
+                                                <input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()">
+                                                <!-- Display patient names as options -->
+                                                {% for patient in getAllPatient %}
+                                                    {% if patient.walkInID is None %}
+                                                        <a href="#" onclick="selectPatient('{{ patient.userID.userID }}', '{{ patient.userID.firstName }}')">{{ patient.userID.firstName }} {{ patient.userID.lastName }}</a>
+                                                    {% else %}
+                                                        <a href="#" onclick="selectPatient('{{ patient.walkInID.walkInID }}', '{{ patient.walkInID.firstName }}')">{{ patient.walkInID.firstName }} {{ patient.walkInID.lastName }}</a>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div>
+
+                                            
+                                        </div>
+                                    
+                                        <input type="hidden" id="selectedPatientID" name="selectedPatientID">
+                                        <input type="hidden" id="selectedFirstName" name="selectedFirstName">
+                                    </form>
+                                    
+                                    <form id = "submitRecord" method = "post" action="{% url 'checkPatientInformation' %}">
+                                        {% csrf_token %}
+
+                                        <div class="form-group">
+                                            <label for="firstName">First Name:</label>
+                                            <input type="text" id="firstName" name="firstName" required>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="middleName">Middle Name: (optional)</label>
+                                            <input type="text" id="middleName" name="middleName" >
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="lastName">Last Name:</label>
+                                            <input type="text" id="lastName" name="lastName" required>
+                                        </div>
+
+                                        <div class="form-group">                                    
+                                            <label for="bday">Date of Birth:</label>
+                                            <input type="date" id="bday" name="bday" required>
+                                        </div>
+                                                                                
+                                        <div class="form-group">
+                                            <label for="sex">Sex:</label>
+                                            <select id="sex" name="sex" >
+                                                <option value="Male">Male</option>
+                                                <option value="Female">Female</option>
+                                                <option value="Other">Other</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="barangayDropdown">Select Barangay:</label>
+                                            <select id="homeAddress" name="homeAddress">
+                                                <option value="Barangay 1">Barangay 1</option>
+                                                <option value="Barangay 2">Barangay 2</option>
+                                                <option value="Barangay 3">Barangay 3</option>
+                                                <option value="Barangay 4">Barangay 4</option>
+                                                <option value="Barangay 5">Barangay 5</option>
+                                                <option value="Barangay 6">Barangay 6</option>
+                                                <option value="Barangay 7">Barangay 7</option>
+                                                <option value="Barangay 8">Barangay 8</option>
+                                                <option value="Barangay 9">Barangay 9</option>
+                                                <option value="Barangay 10">Barangay 10</option>
+                                                <option value="Barangay 11">Barangay 11</option>
+                                                <option value="Barra">Barra</option>
+                                                <option value="Bocohan">Bocohan</option>
+                                                <option value="Cotta">Cotta</option>
+                                                <option value="Dalahican">Dalahican</option>
+                                                <option value="Domoit">Domoit</option>
+                                                <option value="Gulang-Gulang">Gulang-Gulang</option>
+                                                <option value="Ibabang Dupay">Ibabang Dupay</option>
+                                                <option value="Ibabang Iyam">Ibabang Iyam</option>
+                                                <option value="Ibabang Talim">Ibabang Talim</option>
+                                                <option value="Ilayang Dupay">Ilayang Dupay</option>
+                                                <option value="Ilayang Iyam">Ilayang Iyam</option>
+                                                <option value="Ilayang Talim">Ilayang Talim</option>
+                                                <option value="Isabang">Isabang</option>
+                                                <option value="Market View">Market View</option>
+                                                <option value="Mayao Castillo">Mayao Castillo</option>
+                                                <option value="Mayao Crossing">Mayao Crossing</option>
+                                                <option value="Mayao Kanluran">Mayao Kanluran</option>
+                                                <option value="Mayao Parada">Mayao Parada</option>
+                                                <option value="Mayao Silangan">Mayao Silangan</option>
+                                                <option value="Ransohan">Ransohan</option>
+                                                <option value="Salinas">Salinas</option>
+                                                <option value="Talao-Talao">Talao-Talao</option>
+                                            </select>
+                                            {% comment %} <input type="text" id="homeAddress" name="homeAddress" required> {% endcomment %}
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="contactNum">Contact Number:</label>
+                                            <input type="text" id="contactNum" name="contactNum" required>
+                                        </div>
+
+                                        <div class="form-group">
+                                        </div>
+
+                                    
+                                        <div class="form-group">
+                                            <button type="submit">Submit</button>
+                                        </div>
+                                    </form> 
+
+                                </div>
+
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                    
+                    
+                </div>
+                <!-- /.container-fluid -->
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright &copy; Your Website 2021</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+
+    </div>
+    <!-- End of Page Wrapper --> 
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">X</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function myFunction() {
+            event.preventDefault();
+            document.getElementById("myDropdown").classList.toggle("show");
+        }
+    
+        function filterFunction() {
+            var input, filter, ul, li, a, i;
+            input = document.getElementById("myInput");
+            filter = input.value.toUpperCase();
+            div = document.getElementById("myDropdown");
+            a = div.getElementsByTagName("a");
+            for (i = 0; i < a.length; i++) {
+                txtValue = a[i].textContent || a[i].innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    a[i].style.display = "";
+                } else {
+                    a[i].style.display = "none";
+                }
+            }
+        }
+
+        function selectPatient(patientID, firstName) {
+            //event.preventDefault();
+            var id = patientID
+            var name = firstName
+            console.log("Selected ID: " + id)
+            console.log("Selected Name: " + name)
+            document.getElementById("selectedPatientID").value = patientID;
+            document.getElementById("selectedFirstName").value = firstName;
+            document.getElementById("submitDropDown").submit();
+        }
+
+        // Get the input element
+        var bdayInput = document.getElementById('bday');
+
+        // Calculate the maximum date allowed (5 years ago)
+        var maxDate = new Date();
+        maxDate.setFullYear(maxDate.getFullYear() - 5);
+
+        // Set the maximum and default date attributes of the input element
+        bdayInput.max = maxDate.toISOString().slice(0, 10);
+        bdayInput.value = maxDate.toISOString().slice(0, 10);
+
+        // Add event listener for input change
+        bdayInput.addEventListener('input', function() {
+            // Get the selected date
+            var selectedDate = new Date(bdayInput.value);
+            
+            // If the selected date is in the future or more than 5 years ago
+            if (selectedDate > maxDate) {
+                // Show an alert
+                alert('Please select a date within the last 5 years.');
+                // Set the input value to the maximum allowed date (5 years ago)
+                bdayInput.value = maxDate.toISOString().slice(0, 10);
+            }
+        });
+    </script>
+
+
+</body>
+
+</html>

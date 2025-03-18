@@ -1,0 +1,248 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <link rel = 'stylesheet' href = {% static 'styles.css' %}>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content />
+        <meta name="author" content />
+        <title>Sign Up</title>
+        <!-- Favicon-->
+        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+        <!-- Custom Google font-->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@100;200;300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet" />
+        
+    </head>
+    <body class="d-flex flex-column">
+        <main class="flex-shrink-0">
+
+            <!-- Navigation-->
+            <nav class="navbar navbar-expand-lg navbar-light bg-white py-3">
+                <div class="container px-5">
+                    <a class="navbar-brand" href="{% url 'index' %}"><span class="fw-bolder text-primary">EyeLuc</span></a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav ms-auto mb-2 mb-lg-0 small fw-bolder">
+                            <li class="nav-item"><a class="nav-link" href="{% url 'index' %}">Home</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'clinics' %}">Clinics</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'locate' %}">Locate</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Page content-->
+            <section class="py-5">
+                <div class="container px-5">
+                    <!-- Contact form-->
+                    <div class="bg-light rounded-4 py-5 px-4 px-md-5">
+                        <div class="text-center mb-5">
+                            <div class="feature bg-primary bg-gradient-primary-to-secondary text-white rounded-3 mb-3"><i class="bi bi-envelope"></i></div>
+                            <h1 class="fw-bolder">Welcome</h1>
+                            <p class="lead fw-normal text-muted mb-0">Already have an account?<br>
+                                <a href="{%url 'login' %}">Click Here to Log In</a>
+                            </p> <br>
+                            {% comment %} <p class="lead fw-normal text-muted mb-0">Sign up as Opthalmologist<br>
+                                <a href="{%url 'signUp_Opthal' %}">Click Here to Log In</a>
+                            </p> {% endcomment %}
+                        </div>                        
+
+                        <div class="row gx-5 justify-content-center">
+                            <div class="col-lg-8 col-xl-6">
+
+                                {% for message in messages %}
+                                    <h3>{{message}}</h3>
+                                {% endfor %}
+
+
+                                <form id="contactForm" method ="POST" action = " ">
+                                    {% csrf_token %}
+                                    <!-- Name input-->
+                                    
+                                    <h3>Personal Information</h3>
+                                    <label>Name</label>
+                                    <div class="row">
+                                        <div class="col">
+                                          <input type="text" id="FName" name="FName" class="form-control" placeholder="First name">
+                                        </div>
+
+                                        <div class="col">
+                                            <input type="text" id="MName" name = "MName" class="form-control" placeholder="Middle name">
+                                        </div>
+                                        
+                                        <div class="col">
+                                          <input type="text" id="LName" name = "LName" class="form-control" placeholder="Last name">
+                                    </div>
+                                    <br>
+                                    {% comment %} Date API na lang kaya sa birthday? hmm.. so gawa muna ako ng placeholder dito {% endcomment %}
+                                    
+                                    <label for="bday">Birthday</label>
+                                    <input id = "bday" name = "bday" type = "date"  date = "YYYY-MM-DD"  class="form-control">
+
+                                    <label for="sex">Sex</label>
+
+                                    <select name="sex" id="sex" name = "sex "  class="form-control">
+                                        <option value="male">Male</option>
+                                        <option value="female">Female</option>
+                                        <option value="others">Others</option>
+                                    </select>
+
+                                    <label for="HomeAdd">Select Barangay:</label>
+                                    <div class="form-floating mb-3">                                        
+                                        {% comment %} <input class="form-control" id="HomeAdd" name = "HomeAdd" type="text" placeholder="Home Address" data-sb-validations="required,text" /> {% endcomment %}
+
+                                        <select class="form-control" id="HomeAdd" name = "HomeAdd" name="barangay">
+                                            <option value="Barangay 1">Barangay 1</option>
+                                            <option value="Barangay 2">Barangay 2</option>
+                                            <option value="Barangay 3">Barangay 3</option>
+                                            <option value="Barangay 4">Barangay 4</option>
+                                            <option value="Barangay 5">Barangay 5</option>
+                                            <option value="Barangay 6">Barangay 6</option>
+                                            <option value="Barangay 7">Barangay 7</option>
+                                            <option value="Barangay 8">Barangay 8</option>
+                                            <option value="Barangay 9">Barangay 9</option>
+                                            <option value="Barangay 10">Barangay 10</option>
+                                            <option value="Barangay 11">Barangay 11</option>
+                                            <option value="Barra">Barra</option>
+                                            <option value="Bocohan">Bocohan</option>
+                                            <option value="Cotta">Cotta</option>
+                                            <option value="Dalahican">Dalahican</option>
+                                            <option value="Domoit">Domoit</option>
+                                            <option value="Gulang-Gulang">Gulang-Gulang</option>
+                                            <option value="Ibabang Dupay">Ibabang Dupay</option>
+                                            <option value="Ibabang Iyam">Ibabang Iyam</option>
+                                            <option value="Ibabang Talim">Ibabang Talim</option>
+                                            <option value="Ilayang Dupay">Ilayang Dupay</option>
+                                            <option value="Ilayang Iyam">Ilayang Iyam</option>
+                                            <option value="Ilayang Talim">Ilayang Talim</option>
+                                            <option value="Isabang">Isabang</option>
+                                            <option value="Market View">Market View</option>
+                                            <option value="Mayao Castillo">Mayao Castillo</option>
+                                            <option value="Mayao Crossing">Mayao Crossing</option>
+                                            <option value="Mayao Kanluran">Mayao Kanluran</option>
+                                            <option value="Mayao Parada">Mayao Parada</option>
+                                            <option value="Mayao Silangan">Mayao Silangan</option>
+                                            <option value="Ransohan">Ransohan</option>
+                                            <option value="Salinas">Salinas</option>
+                                            <option value="Talao-Talao">Talao-Talao</option>
+                                        </select>
+                                    </div>
+
+                                    <label for="email">Contact Number</label> <!-- Daapat ay number lang s'ya -->
+                                    <div class="form-floating mb-3">
+                                        <input class="form-control" id="ContactNum" name = "ContactNum" type="tel" placeholder="Contact Number" data-sb-validations="required, tel" />
+                                    </div>
+
+                                    <label for="email">Email</label>
+                                    <div class="form-floating mb-3">
+                                        <input class="form-control" id="Email" name = "Email" type="email" placeholder="Enter your name..." data-sb-validations="required,email" />
+                                        
+                                        {% comment %} <div class="invalid-feedback" data-sb-feedback="email:required">An email is required.</div>
+                                        <div class="invalid-feedback" data-sb-feedback="email:email">Email is not valid.</div> {% endcomment %}
+                                    </div>
+
+                                    <div class="form-floating mb-3">
+                                        <input class="form-control" id="Username" name = "Username" type="text" data-sb-validations="required, text" />
+                                        <label for="Password">Username</label>
+                                    </div>
+                                    
+                                    <div class="form-floating mb-3">
+                                        <input class="form-control" id="Pass" name = "Pass" type="Password" data-sb-validations="required,Password" />
+                                        <label for="Password">Password</label>
+                                    </div>
+                                    
+                                    <div class="form-floating mb-3">
+                                        <input class="form-control" id="Pass2" name = "Pass2" type="Password" data-sb-validations="required,Password" />
+                                        <label for="Password">Repeat Password</label>
+                                    </div>
+
+                                    <hr> <!-- For Emergency person contact--> <!--  -->
+                                    <h3>Emergency Contact</h3>
+                                    <label>Name</label>
+                                    <div class="row">
+                                        <div class="col">
+                                          <input type="text" id="EFName" name = "EFName" class="form-control" placeholder="First name">
+                                        </div>
+
+                                        <div class="col">
+                                            <input type="text" id="EMName" name = "EMName" class="form-control" placeholder="Middle name">
+                                        </div>
+                                        
+                                        <div class="col">
+                                          <input type="text" id="ELName" name = "ELName" class="form-control" placeholder="Last name">
+                                    </div>
+                                    <br>
+                                    <br>
+                                    <div class="form-floating mb-3">
+                                        <input class="form-control" id="ERelatioship" name = "ERelatioship" type="text" placeholder="Enter your name..." data-sb-validations="required,text" />
+                                        <label for="email">Relationship</label>
+                                    </div>
+                                    
+                                    <label for="email">Contact Number</label> <!-- Daapat ay number lang s'ya -->
+                                    <div class="form-floating mb-3">
+                                        <input class="form-control" id="contactEmNum" name = "contactEmNum" type="tel" placeholder="Contact Number" data-sb-validations="required, tel" />
+                                    </div>
+
+                                    <!-- Submit Button-->
+                                    <div class="d-grid"><button class="btn btn-primary btn-lg enabled" id="submitReg" type="submit">Submit</button></div> <!-- On click, it should go to the database -->
+                                    {% comment %} <input type= "button" value = "submit"> {% endcomment %}
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        
+        <!-- Footer-->
+        <footer class="bg-white py-4 mt-auto">
+            <div class="container px-5">
+                <div class="row align-items-center justify-content-between flex-column flex-sm-row">
+                    <div class="col-auto"><div class="small m-0">Copyright &copy; Your Website 2023</div></div>
+                    <div class="col-auto">
+                        <a class="small" href="#!">Privacy</a>
+                        <span class="mx-1">&middot;</span>
+                        <a class="small" href="#!">Terms</a>
+                        <span class="mx-1">&middot;</span>
+                        <a class="small" href="#!">Contact</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <!-- Bootstrap core JS-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Core theme JS-->
+        <script src="js/scripts.js"></script>
+        <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
+        <script >
+            // Get the input element
+            var bdayInput = document.getElementById('bday');
+
+            // Calculate the maximum date allowed (5 years ago)
+            var maxDate = new Date();
+            maxDate.setFullYear(maxDate.getFullYear() - 5);
+
+            // Set the maximum and default date attributes of the input element
+            bdayInput.max = maxDate.toISOString().slice(0, 10);
+            bdayInput.value = maxDate.toISOString().slice(0, 10);
+
+            // Add event listener for input change
+            bdayInput.addEventListener('input', function() {
+                // Get the selected date
+                var selectedDate = new Date(bdayInput.value);
+                
+                // If the selected date is in the future or more than 5 years ago
+                if (selectedDate > maxDate) {
+                    // Show an alert
+                    alert('Please select a date within the last 5 years.');
+                    // Set the input value to the maximum allowed date (5 years ago)
+                    bdayInput.value = maxDate.toISOString().slice(0, 10);
+                }
+            });
+        </script>
+    </body>
+</html>

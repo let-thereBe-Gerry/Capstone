@@ -1,0 +1,1193 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel = 'stylesheet' href = {% static 'sb-admin-2.min.css' %}>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    {% comment %} <script src='{% static 'index.global.js' %}'></script> {% endcomment %}
+    <!-- any changes in the calendar.js does not affect here, why? -->
+    {% comment %} <script src='{% static 'calendar.js' %}'></script> {% endcomment %}
+
+    <title>Patient Data Sheet</title>
+
+    <!-- Custom fonts for this template-->
+    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+
+
+    <style>       
+        .title {
+            {% comment %} border-left: 6px solid #021D56; {% endcomment %}
+            {% comment %} border-bottom: 6px solid #021D56;   {% endcomment %}
+            {% comment %} background-color: #5C7BF6; {% endcomment %}
+            color: black;
+            font-weight: bold;
+            {% comment %} text-align: left; {% endcomment %}
+        }
+        
+        .head{
+            text-align: left;
+            color: black;
+        }
+
+        .offset-row {
+            max-height: 280px; 
+            overflow-y: auto
+          }
+    
+        .button {
+          display: inline-block;
+          padding: 8px 15px;
+          margin-right: 10px;
+          cursor: pointer;
+          border: none;
+          border-radius: 20px;
+        }
+
+        .Consultation{
+            color: black;
+            border-radius: 10px;  
+        }
+
+        #overview-container {
+            max-height: 600px; 
+            overflow-y: auto; 
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 10px;  
+            text-align: left;
+        }
+
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        
+        .head-nav {
+            float: left;
+        }
+        
+        .head-nav a {
+            display: block;
+            color: Gray;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+        
+        .head-nav a:hover {
+            background-color: #3e64d3;
+            color: white;
+        }
+
+        label {
+            color: white;
+            padding-left: 10px;
+            padding-right: 10px;
+            margin: 10px;
+            background: #375dcc;
+            {% comment %} border: 2px solid #5c7bf6; {% endcomment %}
+            border-radius: 10px;
+        }
+
+        {% comment %} .num {
+            -moz-appearance: textfield;
+        } {% endcomment %}
+
+        .hidden {
+            display: none;
+        }
+
+        .header {
+            border-left: 6px solid #021D56;
+            border-bottom: 6px solid #021D56;  
+            {% comment %} background-color: #78d0e0; {% endcomment %}
+            color: white;
+            box-shadow: -5px 5px 8px lightblue;
+        }
+
+        #dataSheet {
+            {% comment %} border: 1px solid red;   {% endcomment %}
+            
+        }
+
+        .row {
+            {% comment %} border: 1px solid red;   {% endcomment %}
+            
+        }
+
+        .title-container {
+            margin-top: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+      </style>
+
+      <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var form = document.getElementById('submitRecord'); // Replace 'yourFormId' with the actual ID of your form
+
+            form.addEventListener('submit', function (event) {
+                // Perform your custom validation here
+                if (!validateForm()) {
+                    event.preventDefault(); // Prevent the form from being submitted
+                }
+            });
+
+            function validateForm() {
+                // Add your validation logic here
+                // Return true if the form is valid, false otherwise
+                // For example, you can check if required fields are filled, etc.
+                return true; // Change this line based on your validation logic
+            }
+        });
+    </script>
+      
+    </head>
+
+<body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+            <!-- Sidebar - Brand -->
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{% url 'index'%}">
+                <div class="sidebar-brand-icon rotate-n-15">
+                    <i class="fas fa-laugh-wink"></i>
+                </div>
+                <div class="sidebar-brand-text mx-3">EyeLuc </div>
+            </a>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider"> <!-- Ito yung parang may dash -->
+
+            <li class="nav-item active">
+                <a class="nav-link" href="{%url 'dashboard' %}">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Dashboard</span></a>
+            </li>
+
+            <hr class="sidebar-divider">
+
+            <li class="nav-item active">
+                <a class="nav-link" href="">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Facebook Pages</span></a>
+            </li>
+
+            <hr class="sidebar-divider">
+
+            <li class="nav-item active">
+                <a class="nav-link" href="{%url 'clinic_services' %}">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Services</span></a>
+            </li>
+            
+            <hr class="sidebar-divider">
+
+            <li class="nav-item active">
+                <a class="nav-link" href="{%url 'clinic_dashboard_profile' %}">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Profile</span></a>
+            </li>
+            
+            <hr class="sidebar-divider">
+
+            <li class="nav-item active">
+                <a class="nav-link" href="{%url 'clinic_patintTables' %}"> 
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Table</span></a> <!-- Dito nakalagay yung mga current at past na naging patient -->
+            </li>
+            
+            <hr class="sidebar-divider">
+
+            <li class="nav-item active">
+                <a class="nav-link" href="{%url 'clinic_messages' %}"> 
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Messages</span></a> 
+            </li>
+            
+            <hr class="sidebar-divider">
+            
+            <!-- Sidebar Toggler (Sidebar) -->
+            <div class="text-center d-none d-md-inline">
+                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+            </div>
+        </ul>
+        <!-- End of Sidebar --> 
+        
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                    {% comment %} <h3>{{ clinic_name }}</h3>  <!-- For Debugging Only --> {% endcomment %}
+                    <ul>
+                        <li class = "head-nav"><a href="{%url 'dashboard' %}">General</a></li>
+                        <li class = "head-nav"><a href="{%url 'clinic_dashboard_notes' %}">Clinical Notes</a></li>
+                        <li class = "head-nav"><a href="{%url 'clinic_dashboard_Stats' %}">Clinical Statistics</a></li> <!-- Nakalagay dito yung Monthly statistics kung ilang patient ang nag papa appoint sa kanila, kung sinong patient ang kadalasan nag papa appoint, at yung ratings pa pala, shittt -->
+                        <li class = "head-nav"><a href="{%url 'clinic_dashboard_AddApt' %}">Walk In</a></li>
+                    </ul>
+                    
+                    <!-- Topbar Navbar -->
+                    <ul class="navbar-nav ml-auto">
+                                               
+                        <!-- Nav Item - User Information -->
+                        <li class="nav-item dropdown no-arrow">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Name of the Client</span>
+                                <img class="img-profile rounded-circle"
+                                    src="img/undraw_profile.svg">
+                            </a>
+                            <!-- Dropdown - User Information -->
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                aria-labelledby="userDropdown">
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Profile
+                                </a>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Settings
+                                </a>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Activity Log
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Logout
+                                </a>
+                            </div>
+                        </li>
+                    </ul>
+                </nav>
+                <!-- End of Topbar -->
+        
+                <!-- Content Wrapper -->
+                <div id="content-wrapper" class="d-flex flex-column"> 
+                    <!-- Main Content -->
+                    <div id="content">
+
+                        <!-- Begin Page Content -->
+                        <div class="container rounded bg-white mt-2 mb-2 shadow" >
+
+                            <div class="row"> 
+                                <div class="col col-lg-15"> 
+
+                                    <div class="card-header d-flex flex-row align-items-center justify-content-between" style = "background: #375dcc; color: white">
+                                        <h4 class="m-0 font-weight-bold ">Patient Data Sheet</h4>                                    
+                                    </div>  
+
+                                    <div class="row">
+                                        <div class="col-md ">
+                                            <div class="px-1 py-3">
+                                                <div class=" d-flex justify-content-between align-items-center mb">
+                                                    <h2 class="title text-right">Patient Profile</h2>
+                                                </div>
+                                                <hr>
+                                                
+                                                <div name = "patient-profile"  class="px-2 py-2" id = "patient-profile"style = "color: black">
+                                                    <div class="row mt-1" >
+                                                        <div class="col-md-2 ">
+                                                            <h4 class="labels">Full Name: </h4>
+                                                        </div>
+
+                                                        <div class="col-md-4" >
+                                                            <h4 >// Patient Name</h4>
+                                                        </div>          
+
+                                                        <div class="col-md-2" >
+                                                            <h4 class="labels">Civil Status:</h4>
+                                                        </div>
+
+                                                        <div class="col-md-4">
+                                                            <h4 >// Status</h4>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-2 ">
+                                                            <h4 class="labels">Age: </h4>
+                                                        </div>
+
+                                                        <div class="col-md-4">
+                                                            <h4 >// Patient Age</h4>
+                                                        </div>          
+
+                                                        <div class="col-md-2">
+                                                            <h4 class="labels">Occupation:</h4>
+                                                        </div>
+
+                                                        <div class="col-md-4">
+                                                            <h4 >// Occupation</h4>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-2 ">
+                                                            <h4 class="labels">Birthday: </h4>
+                                                        </div>
+
+                                                        <div class="col-md-4">
+                                                            <h4 >// bday</h4>
+                                                        </div>          
+
+                                                        <div class="col-md-2">
+                                                            <h4 class="labels">Home Add.:</h4>
+                                                        </div>
+
+                                                        <div class="col-md-4">
+                                                            <h4 >// Add</h4>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-2 ">
+                                                            <h4 class="labels">Sex: </h4>
+                                                        </div>
+
+                                                        <div class="col-md-4">
+                                                            <h4 >// sex</h4>
+                                                        </div>          
+
+                                                        <div class="col-md-2">
+                                                            <h4 class="labels">Service:</h4>
+                                                        </div>
+
+                                                        <div class="col-md-4">
+                                                            <h4 >// Service</h4>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-2 ">
+                                                            <h4 class="labels">Contact Num: </h4>
+                                                        </div>
+
+                                                        <div class="col-md-4">
+                                                            <h4 >// num</h4>
+                                                        </div>          
+                                                    </div>
+                                                </div>
+
+                                                <div class=" d-flex justify-content-between align-items-center mb mt-3">
+                                                    <h2 class="title text-right">Clinical Observation</h2>                                                    
+                                                    <hr>
+                                                </div>
+
+                                                <hr>
+
+                                                <div name = "dataSheet"  id = "dataSheet" class = " px-3 mp-3 ">
+                                                    <div name = "openForm">
+                                                        <div class=" d-flex justify-content-between align-items-center mb mt-3">
+                                                            <h2 class="title text-left">Open Form</h2>
+
+                                                            <div class="toggleButton">
+                                                                <button id="dataOcular" name="dataOcular" type="button" class="btn btn-primary btn-lg px-2 py-2 me-sm-3 fs-6 fw-bolder" onclick="toggleCategory('ocularHealthExamination', 'send_dataOcular')" value="1">Toggle Ocular Health Examination </button>                                                        
+                                                                <button id="dataDryEye" name="dataDryEye" type="button" class="btn btn-primary btn-lg px-2 py-2 me-sm-3 fs-6 fw-bolder" onclick="toggleCategory('dryEyeTest', 'send_dataDryEye')" value="2">Toggle Dry Eye Test</button>                                                        
+                                                                <button id="dataRefraction" name="dataRefraction" type="button" class="btn btn-primary btn-lg px-2 py-2 me-sm-3 fs-6 fw-bolder" onclick="toggleCategory('Refraction', 'send_dataRefraction')" value="3">Toggle Refraction</button>
+                                                            </div>
+                                                            
+                                                            <input id="send_dataOcular" name="send_dataOcular" type="hidden" value="">
+                                                            <input id="send_dataDryEye" name="send_dataDryEye" type="hidden" value="">
+                                                            <input id="send_dataRefraction" name="send_dataRefraction" type="hidden" value="">
+                                                        </div>
+                                                    </div>
+
+                                                    <div name = "addInfo">
+                                                        <div class=" d-flexalign-items-center mb mt-3 header">
+                                                            <h4 class="title text-center">Patient Additional Information</h4>
+                                                        </div>
+
+                                                        <div class="row mt-3"  id = "additional-info" name = "additional-info">
+                                                            <div class="col-md-3">
+                                                                <label class="labels" for="status">Civil Status</label>                                                                                                                      
+                                                                <select  class = "form-control" id="status" name="status" required>
+                                                                    <option value="Single">Single</option>
+                                                                    <option value="Married">Married</option>
+                                                                    <option value="Widowed">Widowed</option>
+                                                                </select><br>  
+                                                            </div>
+                                                            
+                                                            <div class="col-md-4">
+                                                                <label  class="labels" for="occupationSelect">Select an occupation:</label>
+                                                                <select class="form-control" id="occupationSelect" name="occupationSelect" onchange="checkCustomOption()">
+                                                                    <option value="Household/Services">Household/Services</option>
+                                                                    <option value="Carpenter">Carpenter</option>
+                                                                    <option value="Construction Worker">Construction Worker</option>
+                                                                    <option value="Electrician">Electrician</option>
+                                                                    <option value="Plumber">Plumber</option>
+                                                                    <option value="Welder">Welder</option>
+                                                                    <option value="Mason">Mason</option>
+                                                                    <option value="Driver">Driver (e.g., Tricycle, Jeepney, Taxi)</option>
+                                                                    <option value="Teacher">Teacher</option>
+                                                                    <option value="Nurse">Nurse</option>
+                                                                    <option value="Doctor">Doctor</option>
+                                                                    <option value="Engineer">Engineer</option>
+                                                                    <option value="Architect">Architect</option>
+                                                                    <option value="Accountant">Accountant</option>
+                                                                    <option value="Office Clerk">Office Clerk</option>
+                                                                    <option value="Salesperson">Salesperson</option>
+                                                                    <option value="Chef">Chef</option>
+                                                                    <option value="Waiter/Waitress">Waiter/Waitress</option>
+                                                                    <option value="Cook">Cook</option>
+                                                                    <option value="Bartender">Bartender</option>
+                                                                    <option value="Security Guard">Security Guard</option>
+                                                                    <option value="Police Officer">Police Officer</option>
+                                                                    <option value="Firefighter">Firefighter</option>
+                                                                    <option value="IT Professional">IT Professional</option>
+                                                                    <option value="Call Center Agent">Call Center Agent</option>
+                                                                    <option value="Graphic Designer">Graphic Designer</option>
+                                                                    <option value="Writer/Journalist">Writer/Journalist</option>
+                                                                    <option value="Entrepreneur">Entrepreneur</option>
+                                                                    <option value="Retail Worker">Retail Worker</option>
+                                                                    <option value="Janitor/Cleaner">Janitor/Cleaner</option>
+                                                                    <option value="Social Worker">Social Worker</option>
+                                                                    <option value="Librarian">Librarian</option>
+                                                                </select>
+                                                            </div>  
+
+                                                            <div class="col-md-5 pl-0 ml-0">
+                                                                <label for="customOccupation" ><small>Enter Occupation if not in the Option:</small></label>
+                                                                <input class="form-control" type="text" id="customOccupation" name="customOccupation" placeholder="Type your occupation">
+                                                                <input type="hidden" id="Occupation" name="Occupation">
+                                                            </div>                                                  
+                                                        </div>
+                                                        <hr>
+                                                    </div>
+
+                                                    <div name = "medHist">
+
+                                                        <div class=" d-flexalign-items-center mb mt-3 header">
+                                                            <h4 class="title text-center">Patient Medical History</h4>
+                                                        </div> 
+
+                                                        <div name = "EyeProblem">
+                                                        
+                                                            <div class=" d-flexalign-items-center mb mt-3">
+                                                                <h5 class="title text-left">Eye Problems</h5>
+                                                            </div>
+                                                            
+                                                            <div class="row mt-3">
+                                                                <div class="col-md-3">
+                                                                    <input type="checkbox" id="is_HeartProblem" name="is_HeartProblem" value="True" class="check-with-textarea">
+                                                                    <label class="labels" for="is_HeartProblem">Heart Problem</label>
+                                                                    <input type="number" class = "form-control" id="recordDate2" name="recordDate2" placeholder = "Enter Year" oninput="checkCheckbox(this, 'is_HeartProblem')">
+                                                                </div>
+
+                                                                <div class="col-md-3">
+                                                                    <input type="checkbox" id="is_Hypertention" name="is_Hypertention" value="True" class="check-with-textarea">
+                                                                    <label for="is_Hypertention">hypertension</label>
+                                                                    <input type="number" class = "form-control" id="recordDate1" name="recordDate1" cols="30" placeholder = "Enter Year" oninput="checkCheckbox(this 'is_Hypertention')">
+
+                                                                </div>
+
+                                                                <div class="col-md-3">
+                                                                    <input type="checkbox" id="is_Diabetes" name="is_Diabetes" value="True" class="check-with-textarea">
+                                                                    <label for="is_Diabetes">Diabetes</label>
+                                                                    <input type="number" class = "form-control" id="recordDate3" name="recordDate3" cols="30" placeholder = "Enter Year" oninput="checkCheckbox(this, 'is_Diabetes')"> 
+
+                                                                </div>
+
+                                                                <div class="col-md-3">
+                                                                    <input type="checkbox" id="otherDiagnosedHealth" name="otherDiagnosedHealth" value="True" class="check-with-textarea">
+                                                                    <label for="otherDiagnosedHealth">Others</label>
+                                                                    <input type="number" class = "form-control" id="recordDate7" name="recordDate7" cols="30" placeholder = "Enter Year" oninput="checkCheckbox(this, 'otherDiagnosedHealth')">
+
+                                                                </div>
+                                                            </div>       
+                                                            <div class="row">
+                                                                <div class="col-md-3">
+                                                                    <input type="checkbox" id="is_Stroke" name="is_Stroke" value="True" class="check-with-textarea">
+                                                                    <label for="is_Stroke">Stroke</label>
+                                                                    <input type="number" class = "form-control" id="recordDate4" name="recordDate4" cols="30" placeholder = "Enter Year" oninput="checkCheckbox(this, 'is_Stroke')">
+                                                                
+                                                                </div>
+
+                                                                <div class="col-md-3">
+                                                                    <input type="checkbox" id="is_Asthma" name="is_Asthma" value="True" class="check-with-textarea">
+                                                                    <label for="is_Asthma">Asthma</label>
+                                                                    <input type="number" class = "form-control" id="recordDate5" name="recordDate5" cols="30" placeholder = "Enter Year" oninput="checkCheckbox(this, 'is_Asthma')">
+                                                                    
+                                                                </div>
+
+                                                                <div class="col-md-3 ">
+                                                                    <input type="checkbox" id="is_DiagnosedNone" name="is_DiagnosedNone" value="True">
+                                                                    <label for="is_DiagnosedNone">N/A</label>
+                                                                </div>
+                                                            </div> 
+                                                        </div> 
+                                                        <hr >
+
+                                                        <div name = "Habits">
+                                                            <div class=" d-flexalign-items-center mb mt-3">
+                                                                <h5 class="title text-left">Habits</h5>
+                                                            </div>
+
+                                                            <div class="row mt-0">
+                                                                <div class="col-md-4">
+                                                                    <input type="checkbox" id="is_Smoking" name="is_Smoking" value="True" class="check-with-textarea">
+                                                                    <label for="is_Smoking">Smoking</label>
+                                                                    {% comment %} <select class = "form-control" name="is_SmokingFreq" id="is_SmokingFreq">
+                                                                        <option value="Seldom">S - Seldom</option>
+                                                                        <option value="Occastionally">O - Occastionally</option>
+                                                                        <option value="Frequency">F - Frequency</option>
+                                                                    </select><br> {% endcomment %}
+                                                                    <input type="number" class = "form-control" id="is_SmokingYear" name="is_SmokingYear" cols="30" placeholder = "Number of Years" oninput="checkCheckbox(this, 'is_Smoking')">
+
+                                                                </div>
+
+                                                                <div class="col-md-4">
+                                                                    <input type="checkbox" id="is_Alcohol" name="is_Alcohol" value="True" class="check-with-textarea">
+                                                                    <label for="is_Alcohol">Alcohol</label>
+                                                                    {% comment %} <select class = "Consultation" name="is_AlcoholFreq" id="is_AlcoholFreq">
+                                                                        <option value="Seldom">S - Seldom</option>
+                                                                        <option value="Occastionally">O - Occastionally</option>
+                                                                        <option value="Frequency">F - Frequency</option>
+                                                                    </select><br> {% endcomment %}
+                                                                    <input type="number" class = "form-control" id="recordDate8" name="recordDate8" cols="30" placeholder = "Number of Years" oninput="checkCheckbox(this,'is_Alcohol')">
+                                                            
+                                                                </div>
+
+                                                                <div class="col-md-3 ">
+                                                                    <input type="checkbox" id="is_HabitsNone" name="is_HabitsNone" value="True">
+                                                                    <label for="is_HabitsNone">N/A</label>
+                                                                </div>
+                                                            </div> 
+                                                        </div> 
+                                                        <hr>
+
+                                                        <div name = "Allergies">
+                                                            <div class=" d-flexalign-items-center mb mt-3">
+                                                                <h5 class="title text-left">Allergies</h5>
+                                                            </div>
+
+                                                            <div class="row mt-3">
+                                                                <div class="col-md-3">
+                                                                    <label for="medicinesAller">Medicines</label> 
+                                                                    <textarea class = "form-control" id="medicinesAller" name="medicinesAller"  placeholder = "Name of Medicines"></textarea>
+                                                                </div>
+
+                                                                <div class="col-md-3">
+                                                                    <label for="foodsAller">Foods</label>
+                                                                <textarea class = "form-control" id="foodsAller" name="foodsAller" placeholder = "Name of Foods"></textarea>
+
+                                                                </div>
+
+                                                                <div class="col-md-3">
+                                                                    <label for="otherAller">Others</label>
+                                                                    <textarea class = "form-control" id="otherAller" name="otherAller"placeholder = "Enter here..."></textarea>
+
+                                                                </div>
+
+                                                                <div class="col-md-3">
+                                                                    <input type="checkbox" id="is_AllergiesNone" name="is_AllergiesNone" value="True">
+                                                                    <label for="is_AllergiesNone">N/A</label>
+
+                                                                </div>
+                                                            </div> 
+                                                        </div>
+                                                        <hr>
+
+                                                        <div name = "eyeHis">
+                                                            <div class=" d-flexalign-items-center mb mt-3">
+                                                                <h5 class="title text-left">Eye History</h5>
+                                                            </div>
+
+                                                            <div class="row mt-2">
+                                                                <div class="col-md-2">
+                                                                    <input type="checkbox" id="is_Cataract" name="is_Cataract" value="True">
+                                                                    <label for="is_Cataract">Cataract</label>
+                                                                </div>
+
+                                                                <div class="col-md-2">
+                                                                    <input type="checkbox" id="is_Glaucama" name="is_Glaucama" value="True">
+                                                                    <label for="is_Glaucama">Glaucoma</label> 
+
+                                                                </div>
+
+                                                                <div class="col-md-3">
+                                                                    <input type="checkbox" id="is_RetinalDisease" name="is_RetinalDisease" value="True"> 
+                                                                    <label for="is_RetinalDisease">Retinal Disease</label> 
+
+                                                                </div>
+
+                                                                <div class="col-md-3">
+                                                                    <label for="othersEyeHis">Others (please specify)</label> 
+                                                                    <textarea class = "form-control" id="othersEyeHis" name="othersEyeHis" cols="30" placeholder = "..."></textarea>
+
+                                                                </div>
+
+                                                                <div class="col-md-2">
+                                                                    <input type="checkbox" id="is_EHNone" name="is_EHNone" value="True" >
+                                                                    <label for="is_EHNone">N/A</label> 
+
+                                                                </div>
+                                                            </div> 
+
+
+                                                        </div>
+                                                        <hr>
+
+                                                        <div name = "PreviousEyeSurgeries">
+                                                            <div class=" d-flexalign-items-center mb mt-3">
+                                                                <h5 class="title text-left">Previous Eye Surgeries</h5>
+                                                            </div>
+
+                                                            <div class="row mt-3">
+                                                                <div class="col-md-10">
+                                                                    <label for="eyeSurgeries">Please indicate year and eye</label>
+                                                                    <textarea class = "form-control" id="eyeSurgeries" name="eyeSurgeries" rows="4"  placeholder = "Enter Year"></textarea>
+                                                                </div>
+
+                                                                <div class="col-md-2">
+                                                                    <input type="checkbox" id="is_EHNone" name="is_EHNone" value="True" >
+                                                                    <label for="is_EHNone">N/A</label> 
+                                                                </div>
+
+                                                            </div>
+
+                                                        </div>
+                                                        <hr>
+                                                        
+                                                        <div name = "FamilyHistory">
+                                                            <div class=" d-flexalign-items-center mb mt-3">
+                                                                <h5 class="title text-left">Family History</h5>
+                                                            </div>
+
+                                                            <div class="row mt-2">
+                                                                <div class="col-md-2">
+                                                                    <input type="checkbox" id="is_GlaucamaF" name="is_GlaucamaF" value="True">
+                                                                    <label for="is_GlaucamaF">Glaucoma</label>
+                                                                </div>
+
+                                                                <div class="col-md-2">
+                                                                    <input type="checkbox" id="is_HypertentionF" name="is_HypertentionF" value="True">
+                                                                    <label for="is_HypertentionF">hypertension</label>
+
+                                                                </div>
+
+                                                                <div class="col-md-2">
+                                                                    <input type="checkbox" id="is_Blindness" name="is_Blindness" value="True">
+                                                                    <label for="is_Blindness">Blindness</label>
+
+                                                                </div>
+
+                                                                <div class="col-md-2">
+                                                                    <input type="checkbox" id="is_DiabetesF" name="is_DiabetesF" value="True">
+                                                                    <label for="is_DiabetesF">Diabetes</label>
+
+                                                                </div>
+
+                                                                <div class="col-md-2">
+                                                                    <input type="checkbox" id="is_CataractF" name="is_CataractF" value="True">
+                                                                    <label for="is_CataractF">Cataract</label>
+
+                                                                </div>
+
+                                                                <div class="col-md-2">
+                                                                    <input type="checkbox" id="is_FHNone" name="is_FHNone" value="True">
+                                                                    <label for="is_FHNone">N/A</label>
+
+                                                                </div>
+                                                            </div> 
+                                                        </div>
+                                                        <hr>
+
+                                                        <div style="display: flex; align-items: center;">
+                                                            <input type="checkbox" id="confirm" name="confirm" value="True" required>
+                                                            <label class = "px-3 py-2" for="confirm" style="text-decoration: none; border: 1px solid gray; background: none; color: black">By aggreing this document, I acknowledge that my personal data, including but not limited to my name, address, date of birth, health information, contact number/s, and the other personal and sensitive information are processed by {{ clinicID }} as my official medical documents </label> <br>
+                                                        </div>
+
+                                                    </div>
+
+                                                    <div name = "OHC">
+                                                        <div class=" d-flexalign-items-center mb mt-3 header">
+                                                            <h4 class="title text-center">Ocular Health Examination</h4>
+                                                        </div> 
+
+                                                        <div name = "OcularHealthExamination">
+                                                            
+                                                            <div class="row mt-5">
+                                                                <div class="col-md-4 ">
+                                                                    <h4 class="title text-center">OD (Right Eye)</h4> 
+                                                                </div>
+
+                                                                <div class="col-md-4 mb-0 pb-0" >
+                                                                </div>
+
+                                                                <div class="col-md-4">
+                                                                    <h4 class="title text-center">OS (Left Eye)</h4> 
+                                                                </div>
+                                                            </div> 
+
+                                                            <div class="row">
+                                                                <div class="col-md-4 ">
+                                                                    <input class = "form-control" id="od_Lids_Lashes" name="od_Lids_Lashes"  placeholder = "Name of Medicines">
+                                                                    {% comment %} <textarea class = "Consultation" id="od_Lids_Lashes" name="od_Lids_Lashes" cols="50" placeholder = "Enter Here"></textarea> <br><br> {% endcomment %}
+                                                                </div>
+
+                                                                <div class="col-md-4 mb-0 pb-0" >
+                                                                    <h4 class="title-container"> Lids & Lashes </h4>
+                                                                </div>
+
+                                                                <div class="col-md-4">
+                                                                    <input class = "form-control" id="os_Lids_Lashes" name="os_Lids_Lashes"placeholder = "Enter here..."> 
+                                                                    {% comment %} <textarea class = "Consultation" id="os_Lids_Lashes" name="os_Lids_Lashes" cols="50" placeholder = "Enter Here"></textarea> <br><br> {% endcomment %}
+                                                                </div>
+                                                            </div> 
+
+                                                            <div class="row">
+                                                                <div class="col-md-4 ">
+                                                                    <input class = "form-control" id="od_Bulbar" name="od_Bulbar"  placeholder = "Name of Medicines">
+                                                                    {% comment %} <textarea class = "Consultation" id="od_Bulbar" name="od_Bulbar" cols="50" placeholder = "Enter Here"></textarea> <br><br> {% endcomment %}
+                                                                </div>
+
+                                                                <div class="col-md-4 mb-0 pb-0" >
+                                                                    <h4  class="title-container"> Bulbar Conjunctiva </h4>
+                                                                </div>
+
+                                                                <div class="col-md-4">
+                                                                    <input class = "form-control" id="os_Bulbar" name="os_Bulbar"placeholder = "Enter here..."> 
+                                                                    {% comment %} <textarea class = "Consultation" id="os_Bulbar" name="os_Bulbar" cols="50" placeholder = "Enter Here"></textarea> <br><br> {% endcomment %}
+                                                                </div>
+                                                            </div> 
+
+                                                            <div class="row">
+                                                                <div class="col-md-4 ">
+                                                                    <input class = "form-control" id="od_Palpebral" name="od_Palpebral"  placeholder = "Name of Medicines">
+                                                                    {% comment %} <textarea class = "Consultation" id="od_Palpebral" name="od_Palpebral" cols="50" placeholder = "Enter Here"></textarea> <br><br> {% endcomment %}
+                                                                </div>
+
+                                                                <div class="col-md-4 mb-0 pb-0" >
+                                                                    <h4  class="title-container"> Palpebral Conjunctiva </h4>
+                                                                </div>
+
+                                                                <div class="col-md-4">
+                                                                    <input class = "form-control" id="os_Palpebral" name="os_Palpebral"placeholder = "Enter here..."> 
+                                                                    {% comment %} <textarea class = "Consultation" id="os_Palpebral" name="os_Palpebral" cols="50" placeholder = "Enter Here"></textarea> <br><br> {% endcomment %}
+                                                                </div>
+                                                            </div> 
+
+                                                            <div class="row">
+                                                                <div class="col-md-4 ">
+                                                                    <input class = "form-control" id="od_Cornea" name="od_Cornea"  placeholder = "Name of Medicines">
+                                                                    {% comment %} <textarea class = "Consultation" id="od_Cornea" name="od_Cornea" cols="50" placeholder = "Enter Here"></textarea> <br><br> {% endcomment %}
+                                                                </div>
+
+                                                                <div class="col-md-4 mb-0 pb-0" >
+                                                                    <h4  class="title-container">Cornea </h4>
+                                                                </div>
+
+                                                                <div class="col-md-4">
+                                                                    <input class = "form-control" id="os_Cornea" name="os_Cornea"placeholder = "Enter here..."> 
+                                                                    {% comment %} <textarea class = "Consultation" id="os_Cornea" name="os_Cornea" cols="50" placeholder = "Enter Here"></textarea> <br><br> {% endcomment %}
+                                                                </div>
+                                                            </div> 
+
+                                                            <div class="row">
+                                                                <div class="col-md-4 ">
+                                                                    <input class = "form-control" id="od_ChamgerAngle" name="od_ChamgerAngle"  placeholder = "Name of Medicines">
+                                                                    {% comment %} <textarea class = "Consultation" id="od_ChamgerAngle" name="od_ChamgerAngle" cols="50" placeholder = "Enter Here"></textarea> <br><br> {% endcomment %}
+                                                                </div>
+
+                                                                <div class="col-md-4 mb-0 pb-0" >
+                                                                    <h4  class="title-container"> Amt. Chamber Angle </h4>
+                                                                </div>
+
+                                                                <div class="col-md-4">
+                                                                    <input class = "form-control" id="os_ChamgerAngle" name="os_ChamgerAngle"placeholder = "Enter here..."> 
+                                                                    {% comment %} <textarea class = "Consultation" id="os_ChamgerAngle" name="os_ChamgerAngle" cols="50" placeholder = "Enter Here"></textarea> <br><br> {% endcomment %}
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <div class="row">
+                                                                <div class="col-md-4 ">
+                                                                    <input class = "form-control" id="od_Iris" name="od_Iris"  placeholder = "Name of Medicines">
+                                                                    {% comment %} <textarea class = "Consultation" id="od_Iris" name="od_Iris" cols="50" placeholder = "Enter Here"></textarea> <br><br> {% endcomment %}
+                                                                </div>
+
+                                                                <div class="col-md-4 mb-0 pb-0" >
+                                                                    <h4  class="title-container"> Iris </h4>
+                                                                </div>
+
+                                                                <div class="col-md-4">
+                                                                    <input class = "form-control" id="os_Iris" name="os_Iris"placeholder = "Enter here..."> 
+                                                                    {% comment %} <textarea class = "Consultation" id="os_Iris" name="os_Iris" cols="50" placeholder = "Enter Here"></textarea> <br><br> {% endcomment %}
+                                                                </div>
+                                                            </div> 
+
+                                                            <div class="row">
+                                                                <div class="col-md-4 ">
+                                                                    <input class = "form-control" id="od_Lens" name="od_Lens"  placeholder = "Name of Medicines">
+                                                                    {% comment %} <textarea class = "Consultation" id="od_Lens" name="od_Lens" cols="50" placeholder = "Enter Here"></textarea> <br><br> {% endcomment %}
+                                                                </div>
+
+                                                                <div class="col-md-4 mb-0 pb-0" >
+                                                                    <h4  class="title-container">Lens </h4>
+                                                                </div>
+
+                                                                <div class="col-md-4">
+                                                                    <input class = "form-control" id="os_Lens" name="os_Lens"placeholder = "Enter here..."> 
+                                                                    {% comment %} <textarea class = "Consultation" id="os_Lens" name="os_Lens" cols="50" placeholder = "Enter Here"></textarea> <br><br> {% endcomment %}
+                                                                </div>
+                                                            </div> 
+
+                                                            <div class="row">
+                                                                <div class="col-md-4 ">
+                                                                    <input class = "form-control" id="od_Tonometry" name="od_Tonometry"  placeholder = "Name of Medicines">
+                                                                    {% comment %} <textarea class = "Consultation" id="od_Tonometry" name="od_Tonometry" cols="50" placeholder = "Enter Here"></textarea> <br><br> {% endcomment %}
+                                                                </div>
+
+                                                                <div class="col-md-4 mb-0 pb-0" >
+                                                                    <h4  class="title-container"> TONOMETRY </h4>
+                                                                </div>
+
+                                                                <div class="col-md-4">
+                                                                    <input class = "form-control" id="os_Tonometry" name="os_Tonometry"placeholder = "Enter here..."> 
+                                                                    {% comment %} <textarea class = "Consultation" id="os_Tonometry" name="os_Tonometry" cols="50" placeholder = "Enter Here"></textarea> <br><br> {% endcomment %}
+                                                                </div>
+                                                            </div> 
+
+                                                        </div>
+                                                        <hr>
+                                                        
+                                                    </div>
+
+                                                    <div name = "dryEye">
+                                                        <div class=" d-flexalign-items-center mb mt-3 header">
+                                                            <h4 class="title text-center">Dry Eye Test</h4>
+                                                        </div> 
+
+                                                        <div name = "dryEye">   
+
+                                                            <div class="row mt-5">
+                                                                <div class="col-md-6 ">
+                                                                    <h4 class="title text-center">OD (Right Eye)</h4> 
+                                                                </div>
+
+                                                                <div class="col-md-6">
+                                                                    <h4 class="title text-center">OS (Left Eye)</h4> 
+                                                                </div>
+                                                            </div> 
+
+                                                            <div class="row">
+                                                                <div class="col-md-6 ">
+                                                                    <input class = "form-control" id="od_DryEye" name="od_DryEye"  placeholder = "Enter here...">
+                                                                    {% comment %} <textarea class = "Consultation" id="od_DryEye" name="od_DryEye" rows="3" cols="80" placeholder = "Enter Here"></textarea> <br><br> {% endcomment %}
+                                                                </div>
+
+                                                                <div class="col-md-6">
+                                                                    <input class = "form-control" id="os_DryEye" name="os_DryEye"placeholder = "Enter here..."> 
+                                                                    {% comment %} <textarea class = "Consultation" id="os_DryEye" name="os_DryEye" rows="3" cols="80" placeholder = "Enter Here"></textarea> <br><br> {% endcomment %}
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="row mt-3">
+                                                                <div class="col-md-12 ">
+                                                                    {% comment %} <input class = "form-control" id="od_DryEye" name="od_DryEye"  placeholder = "Name of Medicines"> {% endcomment %}
+                                                                    {% comment %} <textarea class = "Consultation" id="od_DryEye" name="od_DryEye" rows="3" cols="80" placeholder = "Enter Here"></textarea> <br><br> {% endcomment %}
+                                                                </div>
+                                                                <div class="col-md-12 ">
+                                                                    <div class="col-md-12" >
+                                                                        <textarea class = "Consultation" id="remarks_Refraction" name="remarks_Refraction" rows="5" cols="110" placeholder = "Remarks"></textarea> 
+                                                                    </div>
+                                                                    {% comment %} <textarea class = "Consultation" id="od_DryEye" name="od_DryEye" rows="3" cols="80" placeholder = "Enter Here"></textarea> <br><br> {% endcomment %}
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                        <hr>
+
+                                                    </div>
+
+                                                    <div name = "refraction">
+                                                        <div class=" d-flexalign-items-center mb mt-3 header">
+                                                            <h4 class="title text-center">Refraction</h4>
+                                                        </div> 
+
+                                                        <div name = "refra"> 
+
+                                                            <div class="row mt-5">
+                                                                <div class="col-md-4 ">
+                                                                    <h4 class="title text-center">Subjective Refraction</h4> 
+                                                                </div>
+
+                                                                <div class="col-md-2">
+                                                                    <h4 class="title text-center">VA</h4> 
+                                                                </div>
+
+                                                                <div class="col-md-2">
+                                                                    <h4 class="title text-center">PD</h4> 
+                                                                </div>
+
+                                                                <div class="col-md-4">
+                                                                    <h4 class="title text-center">Automated Refraction</h4> 
+                                                                </div>
+                                                            </div>  
+
+                                                            <div class="row">
+                                                                <div class="col-md-4 ">
+                                                                    <div style="display: flex; align-items: center;">
+                                                                        <label for="is_Hypertention">OD</label>
+                                                                        <input class = "form-control" id="subRef_OD" name="subRef_OD" cols="30" placeholder = "Enter Here">
+                                                                    </div> 
+                                                                </div>
+
+                                                                <div class="col-md-2">
+                                                                    <div style="display: flex; align-items: center;">
+                                                                        <input class = "form-control" id="va_OD" name="va_OD" cols="30" placeholder = "Enter Here">
+                                                                    </div> 
+                                                                </div>
+
+                                                                <div class="col-md-2">
+                                                                    <div style="display: flex; align-items: center;">
+                                                                        <input class = "form-control" id="pd_OD" name="pd_OD" cols="30" placeholder = "Enter Here">
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="col-md-4">
+                                                                    <div style="display: flex; align-items: center;">
+                                                                        <label for="is_Hypertention">OD</label>
+                                                                        <input class = "form-control" id="autRef_OD" name="autRef_OD" cols="30" placeholder = "Enter Here">
+                                                                    </div>
+                                                                </div>
+                                                            </div> 
+
+                                                            <div class="row">
+                                                                <div class="col-md-4 ">
+                                                                    <div style="display: flex; align-items: center;">
+                                                                        <label for="is_HeartProblem">OS</label>
+                                                                        <input class = "form-control" id="subRef_OS" name="subRef_OS" cols="30" placeholder = "Enter Here">
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="col-md-2">
+                                                                    <div style="display: flex; align-items: center;">
+                                                                        <input class = "form-control" id="va_OS" name="va_OS" cols="30" placeholder = "Enter Here">
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="col-md-2">
+                                                                    <div style="display: flex; align-items: center;">
+                                                                        <input class = "form-control" id="pd_OS" name="pd_OS" cols="30" placeholder = "Enter Here">
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="col-md-4">
+                                                                    <div style="display: flex; align-items: center;">
+                                                                        <label for="is_HeartProblem">OS</label>
+                                                                        <input class = "form-control" id="autRef_OS" name="autRef_OS" cols="30" placeholder = "Enter Here">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <br>
+
+                                                            <div class="row">
+                                                                <div class="col-md-4 ">
+                                                                    <h4 class="title text-center">Near Add</h4> 
+                                                                </div>
+
+                                                                <div class="col-md-8">
+                                                                    <h4 class="title text-center">REMARKS</h4> 
+                                                                </div>
+                                                            </div> 
+
+                                                            <div class="row">
+                                                                <div class="col-md-4 ">
+                                                                    <div style="display: flex; align-items: center;">
+                                                                        <label for="is_Hypertention">OD</label>
+                                                                        <textarea class = "Consultation" id="od_Refraction" name="od_Refraction" cols="30" placeholder = "Enter Here"></textarea>
+                                                                    </div>
+
+                                                                    <br>
+
+                                                                    <div style="display: flex; align-items: center;">
+                                                                        <label for="is_HeartProblem">OS</label>
+                                                                        <textarea class = "Consultation" id="os_Refraction" name="os_Refraction" cols="30" placeholder = "Enter Here"></textarea> 
+                                                                    </div>
+
+                                                                </div>
+
+                                                                <div class="col-md-8">
+                                                                    <div style="display: flex; align-items: center;">
+                                                                        <textarea class = "Consultation" id="remarks_Refraction" name="remarks_Refraction" rows="5" cols="120" placeholder = "Enter Here"></textarea> 
+                                                                    </div>
+                                                                </div>
+                                                            </div> 
+                                                        </div>
+                                                        <hr>
+                                                    </div>
+
+                                                    <div name = "session">
+                                                        <div class=" d-flexalign-items-center mb mt-3 header">
+                                                            <h4 class="title text-center">Session Notes</h4>
+                                                        </div> 
+
+                                                        <div name = "refra"> 
+                                                            <div class="row mt-5" >
+                                                                <div class="col-md-12" >
+                                                                    <textarea class = "Consultation" id="remarks_Refraction" name="remarks_Refraction" rows="5" cols="110" placeholder = "Enter Here"></textarea> 
+                                                                </div>
+                                                            </div>  
+
+                                                            <div style="display: flex; align-items: center;">
+                                                                <input type="checkbox" id="confirm" name="confirm" value="True" required>
+                                                                <label class = "px-3 py-2" for="confirm" style="text-decoration: none; border: 1px solid gray; background: none; color: black">By aggreing this document, I acknowledge that my personal data, including but not limited to my name, address, date of birth, health information, contact number/s, and the other personal and sensitive information are processed by {{ clinicID }} as my official medical documents </label> <br>
+                                                            </div>
+
+                                                        </div>  
+                                                    </div>
+
+                                                </div>                                               
+                                                
+                                                <div class="mt-5 text-center">
+                                                    <button class="btn btn-primary profile-button" type="button">Save Profile</button>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>    
+                                        {% comment %} </div>     {% endcomment %}
+                                </div>    
+                            </div>    
+                        </div>      
+
+                    </div>
+                    <!-- /.container-fluid -->
+
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright &copy; Your Website 2021</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+    </div>
+    <!-- End of Page Wrapper --> 
+
+
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">X</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let storedValues = {
+                button1: null,
+                button2: null,
+                button3: null
+            };
+
+            document.getElementById("dataOcular").addEventListener("click", function() {
+                if (storedValues.button1 === null){                    
+                    storedValues.button1 = "True";
+                    console.log("The Value of the 3rd button is: "+storedValues.button1)
+                } else {
+                    storedValues.button1 = null;
+                    console.log("Button 1 value cleared.");
+                }
+                
+            });
+
+            document.getElementById("dataDryEye").addEventListener("click", function() {
+                if (storedValues.button2 === null){                    
+                    storedValues.button2 = "True";
+                    console.log("The Value of the 3rd button is: "+storedValues.button2)
+                } else {
+                    storedValues.button2 = null;
+                    console.log("Button 2 value cleared.");
+                }
+                
+            });
+
+            document.getElementById("dataRefraction").addEventListener("click", function() {
+                if (storedValues.button3 === null){
+                    storedValues.button3 = "True";
+                    console.log("The Value of the 3rd button is: "+storedValues.button3)
+                
+                } else {
+                    storedValues.button3 = null;
+                    console.log("Button 3 value cleared.");
+                }
+                
+            });
+
+            document.getElementById("submitRecord").addEventListener("submit", function() {
+                // Assign the values to hidden fields in the form before submitting
+                document.getElementById("send_dataOcular").value = storedValues.button1;
+                document.getElementById("send_dataDryEye").value = storedValues.button2;
+                document.getElementById("send_dataRefraction").value = storedValues.button3;
+            });
+        });
+
+        function checkCheckbox(input, checkboxId) {
+            var checkbox = document.getElementById(checkboxId);
+            checkbox.checked = input.value.trim() !== '';
+        }
+
+        function toggleCategory(categoryClass) {
+            console.log("Clicked~!!");
+            var categories = document.getElementsByClassName(categoryClass);
+            for (var i = 0; i < categories.length; i++) {
+                categories[i].classList.toggle('hidden');
+            }
+        }
+    </script>
+</body>
+
+</html>

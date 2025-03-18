@@ -1,0 +1,7 @@
+pip install djangorestframework
+pip install Pillow
+pip install django-chartjs
+pip install matplotlib
+pip install xhtml2pdf
+pip install numpy
+pip install matplotlib

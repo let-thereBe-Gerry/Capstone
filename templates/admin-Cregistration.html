@@ -1,0 +1,376 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel = 'stylesheet' href = {% static 'sb-admin-2.min.css' %}>
+    <link rel = 'stylesheet' href = {% static 'styles.css' %}>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Dashboard</title>
+
+    <!-- Custom fonts for this template-->
+    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+    
+    <style>
+    
+        .inner-box {
+        border: 1px solid #ddd;
+        padding: 15px;
+        margin-top: 10px;
+        color: black
+        }
+    
+        /* Style for buttons */
+        .button {
+        display: inline-block;
+        padding: 8px 15px;
+        margin-right: 10px;
+        cursor: pointer;
+        border: none;
+        border-radius: 20px;
+        }
+
+        .max-height-300 {
+            max-height: 550px;
+        }
+
+        #accept_btn{
+        background-color: #4CAF50;
+        color: black;
+
+        }
+
+        #decline_btn{
+        background-color: #ff0000;
+        color: white;
+
+        }
+
+        #appointments-container {
+            max-height: 808px; /* Set the maximum height according to your design */
+            overflow-y: auto; /* Enable vertical scrollbar when content exceeds the height */
+        }
+
+        #today-appointments-container {
+            max-height: 250px; /* Set the maximum height according to your design */
+            overflow-y: auto; /* Enable vertical scrollbar when content exceeds the height */
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            {% comment %} margin-top: 20px;  {% endcomment %}
+        }
+        
+        th, td {
+        padding: 10px;  /* Add padding to th and td for spacing */
+        text-align: center;
+        {% comment %} border: 1px solid #ddd; {% endcomment %}
+        }
+
+        ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        {% comment %} background-color: #333; {% endcomment %}
+        }
+        
+        .head-nav {
+        float: left;
+        }
+        
+        .head-nav a {
+        display: block;
+        color: Gray;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+        }
+        
+        .head-nav a:hover {
+        background-color: #3e64d3;
+        color: white;
+        }
+    </style>
+
+    </head>
+
+
+    <body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+            <!-- Sidebar - Brand -->
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{% url 'index'%}">
+                <div class="sidebar-brand-icon rotate-n-15">
+                    <i class="fas fa-laugh-wink"></i>
+                </div>
+                <div class="sidebar-brand-text mx-3">EyeLuc </div>
+            </a>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0">
+
+            <!-- Nav Item - Dashboard -->
+            <li class="nav-item active">
+                <a class="nav-link" href="{%url 'admin_Dashboard' %}">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Home</span></a> <!-- This will bring them on homepage of the website -->
+            </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider"> <!-- Ito yung parang may dash -->
+
+            <li class="nav-item active">
+                <a class="nav-link" href="{%url 'admin_Clinics_Table' %}">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Clinics</span></a>
+            </li>
+
+            <hr class="sidebar-divider">
+
+            <li class="nav-item active">
+            <a class="nav-link" href="{%url 'admin_RegisterOptha' %}">
+                <i class="fas fa-fw fa-tachometer-alt"></i>
+                <span>Register Opthamologist</span></a>
+            </li> 
+
+            <hr class="sidebar-divider">
+
+            <li class="nav-item active">
+                <a class="nav-link" href="">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Profile</span></a>
+            </li>
+            
+            <hr class="sidebar-divider">
+
+            <li class="nav-item active">
+                <a class="nav-link" href="{%url 'admin_OpthalInfo' %}">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Opthamologist Table</span></a>
+            </li> 
+
+            <hr class="sidebar-divider">
+
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'admin_Tables'%}">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>User Table</span></a> <!-- In admin side, it should show all the user account -->
+            </li>
+            
+            <hr class="sidebar-divider">
+            
+            <!-- Sidebar Toggler (Sidebar) -->
+            <div class="text-center d-none d-md-inline">
+                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+            </div>
+        </ul>
+        <!-- End of Sidebar --> 
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+
+                        <ul>
+                            <li class = "head-nav"><a href="{%url 'admin_Clinics' %}">General</a></li>
+                            <li class = "head-nav"><a href="{%url 'admin_Clinics' %}">Clinics</a></li>
+                            <li class = "head-nav"><a href="{%url 'admin_Cregistration' %}">Add Clinics </a></li>
+                            
+                            {% comment %} <li><a href="#about">About</a></li> {% endcomment %}
+                        </ul>
+                    
+                    
+                    <!-- Topbar Navbar -->
+                    <ul class="navbar-nav ml-auto">
+
+                        
+
+                                               
+                        <!-- Nav Item - User Information -->
+                        <li class="nav-item dropdown no-arrow">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
+                                <img class="img-profile rounded-circle"
+                                    src="img/undraw_profile.svg">
+                            </a>
+                            <!-- Dropdown - User Information -->
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                aria-labelledby="userDropdown">
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Profile
+                                </a>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Settings
+                                </a>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Activity Log
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Logout
+                                </a>
+                            </div>
+                        </li>
+
+                    </ul>
+
+                </nav>
+                <!-- End of Topbar -->
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    <!-- Page Heading -->
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h1 class="h3 mb-0 text-gray-800">Clinic Registration</h1>
+                    </div>
+
+                    {% for message in messages %}
+                        <h3>{{message}}</h3>
+                    {% endfor %}
+                    
+                    <!-- Content Row -->
+                    <div class="row">
+                        <form id="contactForm" action="../admin_registerC" method = "POST"  >
+                            {% csrf_token %}
+                            <hr> 
+                            <h3>Clinic Information</h3>
+                            {% comment %} <h1>All Usernames (Dropdown)</h1> {% endcomment %}
+
+                            Ang kailangan dapat ay makapag register nang Clinic, after that, tsaka mag aassign nang Opthalmologist<BR>
+                            HINDI PUWEDE NA CLINIC MUNA ANG UUNAHIN I REGISTER KASI KUNG SI CLINIC MUNA MAUUN, PAANO ITO MA HAHANDLE KUNG WALANG TAO?
+                            <label for="usernames-dropdown">Select an Opthamologist</label>
+                            <select id="usernames-dropdown" name="users_name" class="form-control">
+                                {% for optha in opthas %}
+                                    <option value="{{ optha.user.username }}">{{ optha.firstName }} {{ optha.lastName }}</option>
+                                {% endfor %}
+                            </select> 
+                            <br>    
+
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Clinic Name</label>
+                                <input type="text" class="form-control" id="exampleInputEmail1" name = "clinicName" aria-describedby="emailHelp" placeholder="Enter Clinic Name" required>
+                                <!-- {% comment %} <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> {% endcomment %} -->
+                            </div>
+                            <br>                                                              
+
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Clinic address</label>
+                                <input type="text" class="form-control" id="exampleInputEmail1" name = "clinicAdd" aria-describedby="emailHelp" placeholder="Clinic Address" required>
+                                <!-- {% comment %} <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</sma    ll> {% endcomment %} -->
+                            </div>
+                            <br>
+
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Clinic Email Address</label>
+                                <input type="email" class="form-control" id="exampleInputEmail1" name = "clinicEmail" aria-describedby="emailHelp" placeholder="Enter email" required>
+                                <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                            </div>
+                            <br>
+
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Clinic Contact Number</label>
+                                <input type="Number" class="form-control" id="exampleInputEmail1" name = "clinicConNum" aria-describedby="emailHelp" placeholder="Ex: 09***" required>
+                                <!-- {% comment %} <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> {% endcomment %} -->
+                            </div>
+                            <br>
+
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Latitude</label>
+                                <input type="text" class="form-control" id="exampleInputEmail1" name = "lati" aria-describedby="emailHelp" placeholder="13.927621" required>
+                            </div>
+                            <br>
+
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Longitude</label>
+                                <input type="text" class="form-control" id="exampleInputEmail1" name = "longi" aria-describedby="emailHelp" placeholder="121.594928" required>
+                            </div>
+                            <br>
+
+                            <div class="form-group form-check">
+                                <!--This will serve that the user will Identify as Doctor-->
+                                <input type="checkbox" class="form-check-input" id="userStats" name="userStats" value="True" required>
+                                <label class="form-check-label" for="exampleCheck1">If the othalmologist are currently assigned to a clinic.</label>
+                            </div> 
+                            
+                            <!-- Submit Button-->
+                            <div class="d-grid"><button class="btn btn-primary btn-lg " id="submitButton" type="submit">Submit</button></div> 
+                        </form>
+
+                    </div>
+                </div>
+                <!-- /.container-fluid -->
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright &copy; Your Website 2021</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper --> 
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">X</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% comment %} <script src="{% static 'sb-admin-2.js' %}" ></script>
+    <script src="{% static 'sb-admin-2.min.js' %}" ></script> {% endcomment %}
+
+</body>
+</html>

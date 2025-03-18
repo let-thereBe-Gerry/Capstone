@@ -1,0 +1,968 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel = 'stylesheet' href = {% static 'sb-admin-2.min.css' %}>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+    {% comment %} <script src='{% static 'index.global.js' %}'></script> {% endcomment %}
+    <!-- any changes in the calendar.js does not affect here, why? -->
+    {% comment %} <script src='{% static 'calendar.js' %}'></script> {% endcomment %}
+
+    <title>Dashboard</title>
+
+    <!-- Custom fonts for this template-->
+    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+    <style>                   
+        .button {
+            display: inline-block;
+            padding: 8px 15px;
+            margin-right: 10px;
+            cursor: pointer;
+            border: none;
+            border-radius: 20px;
+        }
+
+        .button:active {
+            box-shadow: 0 0 10px blue;
+        }
+
+        {% comment %} .active {
+            background-color: brown; 
+        } {% endcomment %}
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border-left: 4px solid #3157c8;
+            border: 1px solid black;
+        }
+        
+        th, td {
+            padding: 10px;
+            padding-bottom: 2px;  
+            text-align: left;
+            box-shadow: 0 0 1px #3157c8;
+
+            {% comment %} border: 1px solid red; {% endcomment %}
+        }
+
+        tr{
+            margin: 4px;
+            {% comment %} box-shadow: 0 0 1px #3157c8; {% endcomment %}
+        }
+
+        th {
+            background: gray;
+            color: white;
+            border-right: 1px solid #3157c8;            
+        }
+        .title {
+            padding: 8px 15px;
+            background: gray;
+            color: white;
+            border-right: 1px solid #3157c8;
+            font-weight: bold;
+            font-size: large; 
+
+        }
+
+          .first-column, .third-column  {
+            max-width: 80px;
+            word-wrap: break-word; 
+        }
+
+        .second-column {
+            {% comment %} max-width: 200px; {% endcomment %}
+            width: 400px;
+            word-wrap: break-word; 
+        }
+          
+
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        {% comment %} background-color: #333; {% endcomment %}
+        }
+        
+        .head-nav {
+            float: left;
+        }
+        
+        .head-nav a {
+            display: block;
+            color: Gray;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+        
+        .head-nav a:hover {
+            background-color: #3e64d3;
+            color: white;
+        }
+
+        .th {
+            border-collapse: collapse;
+            border-radius: 10px;
+            border-left: 6px solid #021D56;
+            border-bottom: 6px solid #021D56;  
+            background-color: #5C7BF6;
+            color: white;
+            text-align: left;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .hideTable {
+            display: table;
+        }
+    
+        .showNotes {
+            display: none;
+        }
+        
+        .firstColDried {
+            width: 200px;
+        }
+
+
+        .ocularAllignment td:nth-child(1) {
+            {% comment %} background:green; {% endcomment %}
+            text-align: right;
+        }
+
+        .ocularAllignment td:nth-child(2) {
+            {% comment %} background:green; {% endcomment %}
+            text-align: center;
+        }
+
+        .ocularAllignment td:nth-child(3) {
+            {% comment %} background:green; {% endcomment %}
+            text-align: left;
+        }
+
+        {% comment %} .hideOCHE {
+            display: block;
+        } {% endcomment %}
+
+      </style>
+
+    </head>
+
+<body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+            <!-- Sidebar - Brand -->
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{% url 'index'%}">
+                <div class="sidebar-brand-icon rotate-n-15">
+                    <i class="fas fa-laugh-wink"></i>
+                </div>
+                <div class="sidebar-brand-text mx-3">EyeLuc </div>
+            </a>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider"> <!-- Ito yung parang may dash -->
+
+            <li class="nav-item ">
+                <a class="nav-link" href="{%url 'dashboard' %}">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Dashboard</span></a>
+            </li>
+
+            <hr class="sidebar-divider">
+
+            <li class="nav-item ">
+                <a class="nav-link" href="">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Facebook Pages</span></a>
+            </li>
+
+            <hr class="sidebar-divider">
+
+            <li class="nav-item ">
+                <a class="nav-link" href="{%url 'clinic_services' %}">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Services</span></a>
+            </li>
+            
+            <hr class="sidebar-divider">
+
+            <li class="nav-item ">
+                <a class="nav-link" href="{%url 'clinic_dashboard_profile' %}">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Profile</span></a>
+            </li>
+            
+            <hr class="sidebar-divider">
+
+            <li class="nav-item ">
+                <a class="nav-link" href="{%url 'clinic_patintTables' %}"> 
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Table</span></a> <!-- Dito nakalagay yung mga current at past na naging patient -->
+            </li>
+            
+            <hr class="sidebar-divider">
+
+            <li class="nav-item ">
+                <a class="nav-link" href="{%url 'clinic_messages' %}"> 
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Messages</span></a> 
+            </li>
+            
+            <hr class="sidebar-divider">
+            
+            <!-- Sidebar Toggler (Sidebar) -->
+            <div class="text-center d-none d-md-inline">
+                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+            </div>
+        </ul>
+        <!-- End of Sidebar --> 
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                    {% comment %} <h3>{{ clinic_name }}</h3>  <!-- For Debugging Only --> {% endcomment %}
+                    <ul>
+                        <li class = "head-nav"><a href="{%url 'dashboard' %}">General</a></li>
+                        {% comment %} <li class = "head-nav"><a href="{%url 'clinic_dashboard_notes' %}">Clinical Notes</a></li> {% endcomment %}
+                        <li class = "head-nav"><a href="{%url 'clinic_dashboard_Stats' %}">Clinical Statistics</a></li> <!-- Nakalagay dito yung Monthly statistics kung ilang patient ang nag papa appoint sa kanila, kung sinong patient ang kadalasan nag papa appoint, at yung ratings pa pala, shittt -->
+                        <li class = "head-nav"><a href="{%url 'clinic_dashboard_walkInForm' %}">Walk In</a></li>
+                        {% comment %} <li><a href="#about">About</a></li> {% endcomment %}
+                    </ul>
+                    
+                    <!-- Topbar Navbar -->
+                    <ul class="navbar-nav ml-auto">
+                                               
+                        <!-- Nav Item - User Information -->
+                        <li class="nav-item dropdown no-arrow">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Name of the Client</span>
+                                <img class="img-profile rounded-circle"
+                                    src="img/undraw_profile.svg">
+                            </a>
+                            <!-- Dropdown - User Information -->
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                aria-labelledby="userDropdown">
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Profile
+                                </a>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Settings
+                                </a>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Activity Log
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Logout
+                                </a>
+                            </div>
+                        </li>
+                    </ul>
+                </nav>
+                <!-- End of Topbar -->
+
+                {% if messages %}
+                    <script>
+                        {% for message in messages %}
+                        alert("{{ message }}");
+                        {% endfor %}
+                    </script>
+                {% endif %}
+
+                <div class="container-fluid">
+                    <!-- Page Heading -->
+
+                    <!-- PATIENT PROFILE -->
+                    <div class="row hide">
+                        <div class="col-md "> 
+                            <div class="card shadow mb-4 max-height-300">
+                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                    <h4 class="m-0 font-weight-bold text-primary">Patient Profile</h4>
+                                    {% comment %} <p class="m-0 font-weight-bold text-primary">This is just a simple data, not yet fumctional</p> {% endcomment %}
+                                     
+
+                                    {% if walkIn == "True" %}                                    
+                                        {% comment %} <a href="/generate_pdf/{{ patient.walkInID }}/report"> <button id="dataDryEye" type="button" class="px-2 py-2  active button" >Generate Report</button> </a>   {% endcomment %}
+                                        <form action="/generate_pdf/{{ patient.walkInID }}/report" method="post">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="getClinic" id="getClinic" value="{{ getClinic }}">
+                                            {{ getClinic }}
+                                            <input type="hidden" name="category" id="category" value="{{ walkIn }}">
+                                            <button id="dataDryEye" type="submit" class="px-2 py-2  active button">Generate Report</button>
+                                        </form>
+                                    {% elif walkIn == "False" %}
+                                        {% comment %} <a href="/generate_pdf/{{ patient.userID }}/report"> <button id="dataDryEye" type="button" class="px-2 py-2  active button" >Generate Report</button> </a>   {% endcomment %}
+                                        <form action="/generate_pdf/{{ patient.userID }}/report" method="post">
+                                            {% csrf_token %}
+                                            {% comment %} walk in is  {{ walkIn }} {{ patient.userID }} {% endcomment %}
+                                            <input type="hidden" name="getClinic" id="getClinic" value="{{ getClinic }}">
+                                            {{ getClinic }}
+                                            <input type="hidden" name="category" id="category" value="{{ walkIn }}">
+                                            <button id="dataDryEye" type="submit" class="px-2 py-2  active button">Generate Report</button>
+                                        </form>
+                                    {% endif %}
+
+                                    {% comment %} nakalagay dapat dito ay kung New Patient or Hindi {% endcomment %}
+                                </div> 
+
+                                <div class="card-body" id="overview-container"> 
+
+                                    <table>
+                                        <tr>
+                                            <td class = "first-column">
+                                                <h4>Patient Name: </h4>
+                                            </td>
+                                            <td class = "second-column">
+                                                <h4>{{ patient }} </h4>
+                                            </td>
+
+                                            <td class = "third-column">
+                                                <h4> Civil Status: </h4>
+                                            </td>
+                                            <td class = "fourth-column">                                                
+                                                <h4> {{ perInID.civilStatus }} </h4>
+                                            </td>
+                                            
+                                        </tr>
+                                        <tr>
+                                            <td class = "third-column">
+                                                <h4> Age: </h4>
+                                            </td>
+                                            <td class = "fourth-column">
+                                                {% if walkIn == "True" %}
+                                                    <h4>{{ patient.age }} </h4>
+                                                {% elif walkIn == "False" %}
+                                                    <h4>{{ patient.age }} </h4>
+                                                {% endif %}
+                                            </td>
+
+                                            <td class = "third-column">
+                                                <h4> Occupation: </h4>
+                                            </td>
+                                            <td class = "fourth-column">
+                                                <h4> {{ perInID.Occupation }} </h4>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class = "first-column">
+                                                <h4>Birthday: </h4>
+                                            </td>
+                                            <td class = "second-column">
+                                                <h4>{{ patient.bday }} </h4>
+                                            </td>
+
+                                            <td class = "third-column">
+                                                <h4> Home Address: </h4>
+                                            </td>
+                                            <td class = "fourth-column">   
+                                                {% if walkIn == True %}
+                                                    <h4>{{ patient.homeAddress }} </h4>
+                                                {% else  %}
+                                                    <h4>{{ patient.homeAddress }} </h4>
+                                                {% endif %}                                                
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class = "first-column">
+                                                <h4>Sex:</h4>
+                                            </td>
+                                            <td class = "second-column">
+                                                <h4>{{ patient.sex }} </h4>
+                                            </td>
+
+                                            <td class = "third-column">
+                                                <h4> Service Acquire: </h4>
+                                            </td>
+                                            <td class = "fourth-column">
+                                                {% if walkIn == "False" %}
+                                                    <h4>{{ bookInfo.serviceID.service_Name }}</h4>
+                                                {% else %}
+                                                    
+                                                    {% comment %} {% if bookInfo.serviceID.service_Name is None %} {% endcomment %}
+                                                        <h4>Walk In</h4>
+                                                    {% comment %} {% endif %} {% endcomment %}
+                                                    
+                                                {% endif %}
+                                            </td>
+
+                                            
+                                        </tr>
+
+                                        <tr>
+                                            <td class = "first-column">
+                                                <h4>Contact Number:</h4>
+                                            </td>
+                                            <td class = "second-column">
+                                                <h4>{{ patient.contactNum }} </h4>
+                                            </td>
+
+                                            
+                                        </tr>
+                                    </table>
+                                    
+                                </div>   
+
+                                <div class="card-body" id="overview-container"> 
+                                        <h3>Clicked button for record</h3>   
+
+                                    <div class="toggleButton" style="text-align: left; margin-top: 10px; margin-bottom: 10px;">
+                                        {% comment %} <button id="dataOcular" type="button" class="px-5 py-3 active button" onclick="toggleCategory('one')" value="1"> Consultation Notes </button> {% endcomment %}
+                                        <button id="dataDryEye" type="button" class="px-5 py-3  active button" onclick="toggleCategory('two')" value="2"> Medical History </button>
+                                        <button id="dataRefraction" type="button" class="px-5 py-3  active button" onclick="toggleCategory('three')" value="3"> O.H.E. Results </button>
+                                        <button id="dataRefractionFour" type="button" class="px-5 py-3 active button" onclick="toggleCategory('four')" value="4"> Dry Eye Test Results </button>
+                                        <button id="dataRefractionFive" type="button" class="px-5 py-3 active button" onclick="toggleCategory('five')" value="5"> Refraction </button>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>  
+                    </div>
+
+                    <div class="row hidden one"> 
+                        <div class="col-md "> 
+                            <div class="card shadow mb-4 max-height-300">
+
+                                <div class="th card-header py-3 d-flex flex-row align-items-center justify-content-between" >
+                                    <h4 class="m-0 font-weight-bold" style="text-decoration: none; color: white; ">Consultation Notes</h4>
+                                </div> 
+
+                                <div class="card-body" id="overview-container"> 
+
+                                    <input type="hidden" id="recordedDateInput" value="">
+                                    <input type="hidden" id="sessionNotesInput" value="">
+                                
+                                    {% if sessionID %}
+                                        <table class="hideTable">
+                                            <tr>
+                                                <th>Date:</th>
+                                                <th>Diagnosis/Consultation Notes:</th>
+                                                <th></th>
+                                            </tr>
+
+                                            {% for session in sessions %}
+                                                <tr>
+                                                    <td>{{ session.dateRecorded }}</td>
+                                                    <td>{{ session.sessionNotes }}</td>
+                                                    <td style="text-align: center;">
+                                                        <button type="button" class="showButton"
+                                                            data-recorded-date="{{ session.dateRecorded }}"
+                                                            data-session-notes="{{ session.sessionNotes }}">View</button>
+                                                        <button type="button" class="showButton" >Print</button>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        </table>
+                                        
+                                        <div class="showNotes" id="showNotes">
+                                            <div class="card-body" style="box-shadow: 0 0 8px gray; margin-top: 20px;">
+                                                <h3 id="recordedDateHeading"> Recorded Date: </h3>
+                                                <p id="sessionNotesParagraph"></p>
+                                                <button type="button" class="closeButton px-5 py-3 active button">Close</button>
+                                                {% comment %} <button type="button" class="closeButton">Close</button> {% endcomment %}
+                                            </div>
+                                        </div>
+
+                                    {% else %}
+                                        <p>No session ID available.</p>
+                                    {% endif %}
+                                </div> 
+
+                            </div>
+                        </div>
+                    </div>
+
+                    {% comment %} Medical History {% endcomment %}
+                    <div class="row hidden two">
+                        <div class="col-md "> 
+                            <div class="card shadow mb-4 max-height-300">
+
+                                <div class="th card-header py-3 d-flex flex-row align-items-center justify-content-between" >
+                                    <h4 class="m-0 font-weight-bold" style="text-decoration: none; color: white; ">Medical History</h4>
+                                </div> 
+
+                                <div class="card-body" id="overview-container"> 
+
+                                    <input type="hidden" id="recordedDateInput" value="">
+                                    <input type="hidden" id="sessionNotesInput" value="">
+
+                                    {% if historys %}
+                                        {% for hist in historys %}
+
+                                            
+
+                                            <div class="d-flex align-items-center justify-content-between" >
+                                                <h3>Recorded date: {{ hist.dateRecorded }} </h3>   
+                                                <button type="button">Print</button>
+                                            </div> 
+
+                                            <table>
+                                                <tr class = "title">
+                                                    <td  colspan="4">Diagnosed Health Problem</td>
+                                                </tr>
+                                                <tr>
+                                                    <td> "{{hist.is_Hypertention}}" Hypertention: {{ hist.recordDate1 }}</td>
+                                                    <td> "{{hist.is_HeartProblem}}" Heart Problem: {{ hist.recordDate2 }}</td>
+                                                    <td> "{{hist.is_Diabetes}}" Diabetes: {{ hist.recordDate3 }}</td>
+                                                    <td> "{{hist.is_Stroke}}" Stroke: {{ hist.recordDate4 }}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td> "{{hist.is_Asthma}}" Asthma: {{ hist.recordDate5 }}</td>
+                                                    <td> "{{hist.is_DiagnosedNone}}" N/A</td>
+                                                    <td> "{{hist.otherDiagnosedHealth}}" Other: {{ hist.recordDate7 }}</td>
+                                                    <td></td>
+                                                </tr>
+
+                                                
+                                                <tr class = "title">
+                                                    <td  colspan="4">Habits</td>
+                                                </tr>
+                                                <tr>
+                                                    <td> "{{hist.is_Smoking}}" Smoking: {{ hist.is_SmokingFreq }}, {{ hist.is_SmokingYear }} </td>
+                                                    <td> "{{hist.is_Alcohol}}" Alcohol: {{ hist.is_AlcoholFreq }}, {{ hist.recordDate8 }} </td>
+                                                    <td> "{{hist.is_HabitsNone}}" N/A</td>
+                                                    <td></td>
+                                                </tr>
+
+                                                
+                                                <tr class = "title">
+                                                    <td  colspan="4">Allergies</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>MEdicines: {{ hist.medicinesAller }}</td>
+                                                    <td>Foods: {{ hist.foodsAller }}</td>
+                                                    <td>Others: {{ hist.otherAller }}</td>
+                                                    <td> "{{hist.is_AllergiesNone}}" Stroke</td>
+                                                </tr>
+
+                                                
+                                                <tr class = "title">
+                                                    <td  colspan="4">Eye History</td>
+                                                </tr>
+                                                <tr>
+                                                    <td> "{{hist.is_Cataract}}" Cataract</td>
+                                                    <td> "{{hist.is_Glaucama}}" Glaucoma</td>
+                                                    <td> "{{hist.is_RetinalDisease}}" Retinal Disease</td>
+                                                    <td> "{{hist.is_Astigmatism}}" Astigmatism</td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td> "{{hist.is_MacularDegeneration}}" Macular Degeneration</td>
+                                                    <td> "{{hist.is_DiabeticRetinopathy}}" Diabetic Retinopathy</td>
+                                                    <td> "{{hist.is_DryEyeSyndrome}}" Dry Eye Syndrome</td>
+                                                    <td> "{{hist.is_Strabismus}}" Strabismus </td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td> "{{hist.is_ColorBlindness}}" Color Blindness</td>
+                                                    <td> "{{hist.is_Keratoconus}}" Keratoconus</td>
+                                                    <td> "{{hist.is_Uveitis}}" Uveitis</td>
+                                                    <td> "{{hist.othersEyeHis}}" Other </td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td> "{{hist.is_EHNone}}" N/A </td>
+                                                </tr>
+
+                                                
+                                                <tr class = "title">
+                                                    <td  colspan="4">Previous Eye Surgeries</td>
+                                                </tr>
+                                                <tr>
+                                                    <td  colspan="4"> {{hist.eyeSurgeries}} </td>
+                                                </tr>
+
+                                                
+                                                <tr  class = "title">
+                                                    <td  colspan="4">Family History</td>
+                                                </tr>
+                                                <tr>
+                                                    <td> "{{hist.is_GlaucamaF}}" Glaucoma</td>
+                                                    <td> "{{hist.is_HypertentionF}}" Hypertention</td>
+                                                    <td> "{{hist.is_Blindness}}" Blindness</td>
+                                                    <td> "{{hist.is_DiabetesF}}" Diabetes</td>
+                                                </tr>
+                                                <tr>
+                                                    <td > "{{hist.is_CataractF}}" Cataract</td>
+                                                    <td > "{{hist.is_FHNone}}" N/A</td>
+                                                </tr>
+
+                                            </table>
+
+                                        {% endfor %}
+
+                                    {% else %}
+                                        <p>No medical history are recorded.</p>
+                                    {% endif %}
+                                </div> 
+                    
+                            </div>
+                        </div>
+                    </div>
+
+                    {% comment %} O.H.E. {% endcomment %}
+                    <div class="row hidden three">
+                        <div class="col-md "> 
+                            <div class="card shadow mb-4 max-height-300">
+
+                                <div class="th card-header py-3 d-flex flex-row align-items-center justify-content-between" >
+                                    <h4 class="m-0 font-weight-bold" style="text-decoration: none; color: white; ">Ocular Health Examination</h4>
+                                </div> 
+
+                                <div class="card-body" id="overview-container"> 
+                                    <input type="hidden" id="getOcularID" value="">                                
+                                    {% if ocHE %}
+                                        <table class="hideTable">
+                                            <tr>
+                                                <th>Date:</th>
+                                                <th>Diagnosis/Consultation Notes:</th>
+                                                <th></th>
+                                            </tr>
+
+                                            {% for ocular in ocHE %}
+                                                <tr>
+                                                    <td>{{ ocular.dateRecorded }}</td>
+                                                    <td>{{ ocular }}</td>
+                                                    <td style="text-align: center;">
+                                                        <button type="button" class="showOCHETable" data-ocular-id="{{ ocular.oheID }}" >View</button>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        </table>
+                                        
+                                        <div class="hideOCHE" id="hideOCHE">
+                                            <div class="card-body" style="box-shadow: 0 0 8px gray; margin-top: 20px;">
+                                                {% for ocular in ocHE %}
+                                                <h3> Recorded Date: {{ ocular.dateRecorded }} </h3>
+                                                    <table class="hideOCHE" >
+                                                        {% comment %} <h1>{{ ocular.oheID }}</h1>
+                                                        <h1>{{ ocular.od_Lids_Lashes }}</h1> {% endcomment %}
+                                                        <tr  class="ocularAllignment">
+                                                            <th>OD:</th>
+                                                            <th></th>
+                                                            <th>OS</th>
+                                                        </tr>            
+                                                        
+                                                        <tr   class="ocularAllignment">
+                                                            <td> {{ ocular.od_Lids_Lashes }} </td>
+                                                            <td>Lids & Lashes</td>
+                                                            <td> {{ ocular.os_Lids_Lashes }} </td>
+                                                        </tr>
+
+                                                        <tr class="ocularAllignment">
+                                                            <td> {{ ocular.od_Bulbar }} </td>
+                                                            <td>Bulbar Conjuctivia</td>
+                                                            <td> {{ ocular.os_Bulbar }} </td>
+                                                        </tr>
+
+                                                        <tr class="ocularAllignment">
+                                                            <td> {{ ocular.od_Palpebral }} </td>
+                                                            <td>Palpebral Conjuctiva</td>
+                                                            <td> {{ ocular.os_Palpebral }} </td>
+                                                        </tr>
+
+                                                        <tr class="ocularAllignment">
+                                                            <td> {{ ocular.od_Cornea }} </td>
+                                                            <td>Cornea</td>
+                                                            <td> {{ ocular.os_Cornea }} </td>
+                                                        </tr>
+
+                                                        <tr class="ocularAllignment">
+                                                            <td> {{ ocular.od_ChamgerAngle }} </td>
+                                                            <td>Amt. Chamber Angle</td>
+                                                            <td> {{ ocular.os_ChamgerAngle }} </td>
+                                                        </tr>
+
+                                                        <tr class="ocularAllignment">
+                                                            <td> {{ ocular.od_Iris }} </td>
+                                                            <td>Iris</td>
+                                                            <td> {{ ocular.os_Iris }} </td>
+                                                        </tr>
+
+                                                        <tr class="ocularAllignment">
+                                                            <td> {{ ocular.od_Lens }} </td>
+                                                            <td>Lens</td>
+                                                            <td> {{ ocular.os_Lens }} </td>
+                                                        </tr>
+
+                                                        <tr class="ocularAllignment">
+                                                            <td> {{ ocular.od_Tonometry }} </td>
+                                                            <td>TONOMETRY</td>
+                                                            <td> {{ ocular.os_Tonometry }} </td>
+                                                        </tr>                                                        
+                                                    </table>
+                                                {% endfor %}
+                                                <button type="button" class="closeButton px-5 py-3 active button">Close</button>                                                
+                                            </div>
+                                        </div>
+
+                                    {% else %}
+                                        <p>No available to show for now.</p>
+                                    {% endif %}
+                                </div> 
+                    
+                            </div>
+                        </div>
+                    </div>
+
+                    {% comment %} Dry Eye Test {% endcomment %}
+                    <div class="row hidden four">
+                        <div class="col-md "> 
+                            <div class="card shadow mb-4 max-height-300">
+
+                                <div class="th card-header py-3 d-flex flex-row align-items-center justify-content-between" >
+                                    <h4 class="m-0 font-weight-bold" style="text-decoration: none; color: white; ">Dry Eye Test</h4>
+                                </div> 
+
+                                <div class="card-body" id="overview-container"> 
+
+                                    <input type="hidden" id="recordedDateInput" value="">
+                                    <input type="hidden" id="sessionNotesInput" value="">
+                                
+                                    {% if dry %}
+                                        <table class="hideTable">
+                                            <tr>
+                                                <th class="firstColDried">Date:</th>
+                                                <th>OD</th>
+                                                <th>OS</th>
+                                            </tr>
+
+                                            {% for dried in dry %}
+                                                <tr>
+                                                    <td class="firstColDried">{{ dried.dateRecorded }}</td>
+                                                    <td>{{ dried.od_DryEye }}</td>
+                                                    <td>{{ dried.os_DryEye }}</td>
+                                                </tr>
+                                            {% endfor %}
+                                        </table>
+                                        
+                                        <div class="showNotes" id="showNotes">
+                                            <div class="card-body" style="box-shadow: 0 0 8px gray; margin-top: 20px;">
+                                                <h3 id="recordedDateHeading"> Recorded Date: </h3>
+                                                <p id="sessionNotesParagraph"></p>
+                                                <button type="button" class="closeButton px-5 py-3 active button">Close</button>
+                                                {% comment %} <button type="button" class="closeButton">Close</button> {% endcomment %}
+                                            </div>
+                                        </div>
+                                    {% else %}
+                                        <p>No session ID available.</p>
+                                    {% endif %}
+                                </div> 
+                    
+                            </div>
+                        </div>
+                    </div>
+
+                    {% comment %} Refraction {% endcomment %}
+                    <div class="row hidden five">
+                        <div class="col-md "> 
+                            <div class="card shadow mb-4 max-height-300">
+
+                                <div class="th card-header py-3 d-flex flex-row align-items-center justify-content-between" >
+                                    <h4 class="m-0 font-weight-bold" style="text-decoration: none; color: white; ">Refraction</h4>
+                                </div> 
+
+                                <div class="hideOCHE" id="hideOCHE">
+                                    <div class="card-body" style="box-shadow: 0 0 8px gray; margin-top: 20px;">
+
+                                        {% if refras %}
+                                            {% for ref in refras %}
+                                            <h3> Recorded Date: {{ ref.dateRecorded }} </h3>
+                                                <table class="hideOCHE" >   
+                                                    
+                                                    <tr>
+                                                        <th> SUBJECTIVE REFRACTION </th>
+                                                        <th>VA</th>
+                                                        <th>PD</th>
+                                                        <th>AUTOMATED REFRACTION</th>
+                                                    </tr>
+                                                    <tr>
+                                                        <td> OD {{ ref.subRef_OD }}</td>
+                                                        <td> {{ ref.va_OD }} </td>
+                                                        <td> {{ ref.pd_OD }} </td>
+                                                        <td>OD {{ ref.autRef_OD }} </td>
+                                                    </tr>
+
+                                                    <tr>
+                                                        <td> OS {{ ref.subRef_OS }}</td>
+                                                        <td> {{ ref.va_OS }} </td>
+                                                        <td> {{ ref.pd_OS }} </td>
+                                                        <td>OS {{ ref.autRef_OS }} </td>
+                                                    </tr>
+
+                                                    <tr>
+                                                        <td colspan = "4"> </td>                                                        
+                                                    </tr>
+
+                                                    <tr>
+                                                        <th> NEAR ADD </th>
+                                                        <th colspan = "3">REMARKS</th>
+                                                    </tr>
+
+                                                    <tr >
+                                                        <td> {{ ref.od_Refraction }} </td>
+                                                        <td colspan = "3" row = "2"> {{ ref.remarks_Refraction }} </th>
+                                                    </tr>
+                                                    <tr>
+                                                        <td> {{ ref.os_Refraction }} </td>
+                                                    </tr>
+
+                                                </table>
+                                            {% endfor %}
+                                        {% else %}
+                                            <p>No session ID available.</p>
+                                        {% endif %}
+                                    </div> 
+                                </div> 
+                    
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+                
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright &copy; Your Website 2021</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+
+    </div>
+    <!-- End of Page Wrapper --> 
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">X</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var showButtons = document.querySelectorAll('.showButton');
+            var showNotesDiv = document.getElementById('showNotes');
+            var recordedDateHeading = document.getElementById('recordedDateHeading');
+            var sessionNotesParagraph = document.getElementById('sessionNotesParagraph');
+            var recordedDateInput = document.getElementById('recordedDateInput');
+            var sessionNotesInput = document.getElementById('sessionNotesInput');
+            var closeButton = document.querySelector('.closeButton');
+            var table = document.querySelector('.hideTable');
+    
+            showButtons.forEach(function (button) {
+                button.addEventListener('click', function () {
+                    // Update the content based on the clicked button's data attributes
+                    recordedDateHeading.textContent = 'Recorded Date: ' + button.dataset.recordedDate;
+                    sessionNotesParagraph.textContent = button.dataset.sessionNotes;
+    
+                    // Store the data in hidden inputs if needed
+                    recordedDateInput.value = button.dataset.recordedDate;
+                    sessionNotesInput.value = button.dataset.sessionNotes;
+    
+                    // Show the notes div and hide the table
+                    showNotesDiv.style.display = 'block';
+                    table.style.display = 'none';
+                });
+            });
+    
+            // Add event listener for the close button
+            closeButton.addEventListener('click', function () {
+                // Hide the notes div and show the table
+                showNotesDiv.style.display = 'none';
+                table.style.display = 'table';
+            });
+        });
+
+        function toggleCategory(categoryClass) {
+            console.log("Clicked~!!");
+            var categories = document.querySelectorAll('.' + categoryClass);
+            var buttons = document.querySelectorAll('.button');
+        
+            categories.forEach(function (category) {
+                category.classList.toggle('hidden');
+            });
+        
+            buttons.forEach(function (button) {
+                // Remove 'active' class only if the button is not related to the clicked category
+                if (!button.classList.contains('btn-' + categoryClass)) {
+                    button.classList.remove('active');
+                }
+            });
+        
+            {% comment %} var activeButton = document.getElementById('data' + categoryClass.charAt(0).toUpperCase() + categoryClass.slice(1));
+            if (!categories[0].classList.contains('hidden')) {
+                activeButton.classList.remove('active');
+            } else {
+                activeButton.classList.add('active');
+            } {% endcomment %}
+        }
+
+    
+    
+    
+    </script>
+  
+</body>
+
+</html>

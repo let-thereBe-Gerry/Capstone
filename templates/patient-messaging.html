@@ -1,0 +1,339 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <link rel = 'stylesheet' href = {% static 'styles.css' %}>
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
+        <title>EyeLuc</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@100;200;300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet" />
+        <!-- Bootstrap icons-->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet" />
+        <!-- <script src="{% static 'script_map.js' %}" ></script> -->
+        <script   src="https://code.jquery.com/jquery-3.1.1.min.js"   integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="   crossorigin="anonymous"></script>
+
+        <!-- POTAENA BAKIT HINDI KA NAGANA SA LABAS?????????? -->
+        <style>
+
+            .messaging {
+                margin: 0 auto;
+                max-width: 800px;
+                padding: 0 20px;
+                max-height: 650px;
+                overflow: auto;
+            }
+            
+            .message-container {
+                border: 2px solid #dedede;
+                {% comment %} background-color: #E5E5E5; {% endcomment %}
+                {% comment %} border-color: red; {% endcomment %}
+                border-radius: 5px;
+                padding: 10px;
+                margin: 10px 0;
+            }
+            
+            .left {
+                display: block;
+                text-align: right !important; 
+                color: black;
+                padding-right: 10px;
+                border-color: #E5E5E5;                
+                border-radius: 13px;                
+                {% comment %} background-color: #031F85; {% endcomment %}
+                background-color: #E2E2E2;
+
+            }
+            
+            .reciever {
+                color: white;
+                border-radius: 13px;              
+
+                {% comment %} border-color: red; {% endcomment %}
+                background-color: #82CA88;
+            }
+            
+            .message-container::after {
+                content: "";
+                clear: both;
+                display: table;
+
+            }
+
+            .time-left {
+                color: #EDEDED;
+                display: block; 
+                text-align: left !important;
+            }
+
+            .time-right {
+                color: #EDEDED;
+                display: block; 
+                text-align: right !important;
+            }
+
+            .container {
+                margin-bottom: 10px; 
+            }
+
+            {% comment %}  {% endcomment %}
+            input[type=textarea], select {
+                width: 100%;
+                padding: 12px 20px;
+                margin: 8px 0;
+                display: inline-block;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                box-sizing: border-box;
+                
+                {% comment %} max-height: 200px;
+                overflow: auto; {% endcomment %}
+                }
+            
+                input[type=submit] {
+                width: 100%;
+                background-color: #4CAF50;
+                color: white;
+                padding: 14px 20px;
+                margin: 8px 0;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                }
+            
+                input[type=submit]:hover {
+                background-color: #45a049;
+                }
+            
+                {% comment %} div { {% endcomment %}
+                .form {
+                border-radius: 5px;
+                background-color: #f2f2f2;
+                padding: 20px;
+                }
+
+        </style>
+
+    </head>
+    <body class="d-flex flex-column h-100">
+        <main class="flex-shrink-0">            
+            <!-- Navigation-->
+            <nav class="navbar navbar-expand-lg navbar-light bg-white py-3">
+                <div class="container px-5">
+                    <a class="navbar-brand" href="{% url 'index' %}"><span class="fw-bolder text-primary">Test Message</span></a>                     
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav ms-auto mb-2 mb-lg-0 small fw-bolder">
+                            
+
+                            <!-- If the user don't have an ID on clinic then they can register a clinic. the problem is what information do we need if they have really a optical clinic -->
+                            {% if user.is_superuser %}
+                                {% comment %} <li class="nav-item"><a class="nav-link" href=" {%url 'admin_Cregistration'%}">Register Clinic</a></li> <!-- the superadmin should only have this --> {% endcomment %}
+                                <li class="nav-item"><a class="nav-link" href="{%url 'user_profile'%}">My Profile</a></li>  <!-- Dito makikita yung info ng user and yung kan'yang schedule -->
+                                <li class="nav-item"><a class="nav-link" href="{%url 'admin_Dashboard' %}">Dashboard</a></li> 
+
+                            {% elif user.is_authenticated %}
+                                <li class="nav-item"><a class="nav-link" href="{%url 'patient_Inbox'%}">Inbox <span class="badge">2</span> </a></li>  
+                                <li class="nav-item"><a class="nav-link" href="{%url 'user_profile'%}">My Profile</a></li>  <!-- Dito makikita yung info ng user and yung kan'yang schedule -->
+                                    {% comment %} If the user have an ID on registered clinic then every time the user log in it will redirect in dashboard {% endcomment %}
+                                    {% if user_client.is_status == True %}
+                                        <li class="nav-item"><a class="nav-link" href="{%url 'dashboard' %}">Dashboard</a></li> 
+                                        {% endif %}
+                            {% endif %}
+                            
+                            <li class="nav-item"><a class="nav-link" href="{% url 'index' %}">Home</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'clinics' %}">Clinics</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'locate' %}">Locate</a></li>
+                            {% comment %} <li class="nav-item"><a class="nav-link" href="{% url 'booking_Page' %}">Book</a></li> {% endcomment %}
+
+                            <!-- kailangan may conditional statement na mailalabas lang s'ya pag once na Admin ang naka log in -->
+                            <!-- {% comment %} <li class="nav-item"><a class="nav-link" href="{%url 'Dashboard' %}">Admin</a></li> Ito ay dapat makikita lang ni Admin {% endcomment %} -->
+                            {% if user.is_authenticated %}
+                                <li class="nav-item"><a class="nav-link" href="{%url 'logout'%}">Log Out</a></li>
+                            {% else %}
+                                <li class="nav-item"><a class="nav-link" href="{%url 'login'%}">Log In</a></li>    <!-- bakit hindi nag da-direct dun sa mismong link? -/- SOLVED! -->
+                            {% endif %}  
+                            <!-- {% comment %} <li class="nav-item"><a class="nav-link" href="login.html">Log In</a></li> {% endcomment %} -->
+                            
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+            <h4>Welcome {{clinic}}</h4>
+
+
+            <div class="container-fluid messaging">
+                <div class="row">                        
+                    <div class="col-md "> 
+                        <div class="card shadow mb " >
+
+                            <div class="card-header flex-row align-items-center ">
+                                <h4>Welcome: {{user_client.userID}}</h4>
+                                <h4>Username: {{username}}</h4>  <!-- Bakit 19 ito pag dating sa Gerry's Eye? -->
+
+                                <div id="display">
+
+                                    <div class="message-container darker left">
+                                    <h3>This is a message container</h3>
+                                    </div>     
+
+                                    <div class="message-container darker">
+                                        <b>Tom</b><p>Hello Everyone, How Are You Guys Doing?</p>
+                                        <span class="time-left">20th, April 2021</span>
+                                        </div>
+
+                                </div>
+
+                                <div class="message-container">
+
+                                    <form id="post-form">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="name" id="name" value="{{username}}"/> <!-- username of the sender or the person who is currently log in -->
+                                        <input type="hidden" name="room_id" id="room_id" value="{{room_details.chatRoomName}}"/> <!-- Room name dapat, ang bobo ko mag name ng variable -->
+                                        <input type="textarea" name="message" id="message" />
+                                        <input type="submit" value="Send">
+                                    </form>
+
+                                </div> 
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </main>
+
+        <!-- Footer-->
+        <footer class="bg-white py-4 mt-auto">
+            <div class="container px-5">
+                <div class="row align-items-center justify-content-between flex-column flex-sm-row">
+                    <div class="col-auto"><div class="small m-0">Copyright &copy; Your Website 2023</div></div>
+                    <div class="col-auto">
+                        <a class="small" href="#!">Privacy</a>
+                        <span class="mx-1">&middot;</span>
+                        <a class="small" href="#!">Terms</a>
+                        <span class="mx-1">&middot;</span>
+                        <a class="small" href="#!">Contact</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+        {% comment %} <script type="text/javascript" src="{% static 'patientMessaging.js' %}">   </script>           {% endcomment %}
+        <script type="text/javascript">            
+            $(document).ready(function(){
+            setInterval(function(){
+
+                var room =  "{{ room }}";
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/' + room + '/mark_messages_as_read/',
+                    data: {
+                        room: room,
+                        csrfmiddlewaretoken: '{{ csrf_token }}'
+                    },
+                    success: function(response) {
+                        console.log("Success:", response);
+                        // Handle success if needed
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error:", error);
+                        // Handle error if needed
+                    }
+                });
+
+                $.ajax({
+                    type: 'GET',
+                    url : "/getMessages/{{room}}/",
+                    success: function(response){
+                        //console.log(response);
+                        $("#display").empty();
+                        for (var key in response.messages) {
+                            var user = response.messages[key].user;
+                            var label = response.messages[key].label;
+
+                            var sender = response.messages[key].sender;
+                            var theSender = response.messages[key].theSender;
+                            var reciever = response.messages[key].clinicSender;
+
+                            // if else para dun sa pag sa sender ay nasa left then pag si reciever ay nasa right?
+
+                            if (sender == theSender){
+                                    // create a CSS that calling this div and move it to the left
+                                var temp = "<div class='darker left'><span class='time-right'><p>"
+
+                                    + response.messages[key].date +
+                                    "</p></span><b>"
+
+                                    + label +
+                                    "</b><p>"
+                                    + response.messages[key].messageContent +                                    
+                                    
+                                    "</p></div>";
+                            
+                                $("#display").append(temp);
+
+                            } else {
+
+                                var temp = "<div class='container reciever'><span class='time-left'><p>"
+
+                                    + response.messages[key].date +
+                                    "</p></span><b>"
+
+                                    + label +
+                                    "</b><p>"
+                                    + response.messages[key].messageContent +
+                                    
+                                    
+                                    "</p></div>";
+                            
+                                $("#display").append(temp);
+                            }
+
+                            
+                        }
+                        
+                    },
+
+                    error: function(response){
+                        //alert('An error occured')
+                    } 
+                });
+            },1000);
+            })                  
+
+            var hiddenValue = document.getElementById("name").value;
+            var roomID = document.getElementById("room_id").value;
+            console.log("User: ", hiddenValue);
+            console.log("Room: ", roomID);
+            // console.log("Message userID: ", {{ messages.userID }}); // Hindi ito gagana kasi hindi naman ito naka declare sa view room 
+
+        
+            $(document).on('submit','#post-form',function(e){
+            e.preventDefault();
+        
+            $.ajax({
+                type:'POST',
+                url:'/send',
+                data:{
+                    username:$('#name').val(),
+                    room_id:$('#room_id').val(),
+                    message:$('#message').val(),
+                csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+                },
+                success: function(data){
+                //alert(data)
+                }
+            });
+            document.getElementById('message').value = ''
+            });
+        </script>
+    
+        </body>
+</html>

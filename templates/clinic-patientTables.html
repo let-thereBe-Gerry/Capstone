@@ -1,0 +1,410 @@
+{% load static %}
+{% load custom_filters %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel = 'stylesheet' href = {% static 'sb-admin-2.min.css' %}>
+    <link rel = 'stylesheet' href = {% static 'styles.css' %}>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Dashboard</title>
+
+    <!-- Custom fonts for this template-->
+    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+
+    </head>
+
+
+    <body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+            <!-- Sidebar - Brand -->
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{% url 'index'%}">
+                <div class="sidebar-brand-icon rotate-n-15">
+                    <i class="fas fa-laugh-wink"></i>
+                </div>
+                <div class="sidebar-brand-text mx-3">EyeLuc </div>
+            </a>
+
+            <!-- Divider -->
+            {% comment %} <hr class="sidebar-divider my-0"> {% endcomment %}
+
+            <!-- Nav Item - Dashboard -->
+            {% comment %} <li class="nav-item active">
+                <a class="nav-link" href="{%url 'index' %}">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Home</span></a> <!-- This will bring them on homepage of the website -->
+            </li> {% endcomment %}
+
+            <!-- Divider -->
+            <hr class="sidebar-divider"> <!-- Ito yung parang may dash -->
+
+            <li class="nav-item active">
+                <a class="nav-link" href="{%url 'dashboard' %}">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Dashboard</span></a>
+            </li>
+
+            {% comment %} <hr class="sidebar-divider"> {% endcomment %}
+
+           <!-- <li class="nav-item active">
+                <a class="nav-link" href="index.html">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Message</span></a>
+            </li> this is still optional
+
+            <hr class="sidebar-divider"> -->
+
+            {% comment %} <li class="nav-item active">
+                <a class="nav-link" href="">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Feedback</span></a>
+            </li> {% endcomment %}
+
+            <hr class="sidebar-divider">
+
+            <li class="nav-item active">
+                <a class="nav-link" href="">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Facebook Pages</span></a>
+            </li>
+
+            <hr class="sidebar-divider">
+
+            <li class="nav-item active">
+                <a class="nav-link" href="{%url 'clinic_services' %}">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Services</span></a>
+            </li>
+            
+            <hr class="sidebar-divider">
+
+            <li class="nav-item active">
+                <a class="nav-link" href="{%url 'clinic_dashboard_profile' %}">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Profile</span></a>
+            </li>
+            
+            <hr class="sidebar-divider">
+
+            <li class="nav-item active">
+                <a class="nav-link" href="">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Table</span></a> <!-- Dito nakalagay yung mga current at past na naging patient -->
+            </li>
+            
+            <hr class="sidebar-divider">
+
+            <li class="nav-item active">
+                <a class="nav-link" href="{%url 'clinic_messages' %}"> 
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Messages</span></a> 
+            </li>
+            
+            <hr class="sidebar-divider">
+            
+            <!-- Sidebar Toggler (Sidebar) -->
+            <div class="text-center d-none d-md-inline">
+                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+            </div>
+        </ul>
+        <!-- End of Sidebar --> 
+
+
+
+
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+                <h3>{{ clinic_name }}</h3> <br>
+
+
+                <!-- Topbar -->
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                    
+                    <!-- Topbar Navbar -->
+                    <ul class="navbar-nav ml-auto">
+
+                                               
+                        <!-- Nav Item - User Information -->
+                        <li class="nav-item dropdown no-arrow">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
+                                <img class="img-profile rounded-circle"
+                                    src="img/undraw_profile.svg">
+                            </a>
+                            <!-- Dropdown - User Information -->
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                aria-labelledby="userDropdown">
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Profile
+                                </a>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Settings
+                                </a>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Activity Log
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Logout
+                                </a>
+                            </div>
+                        </li>
+
+                    </ul>
+
+                </nav>
+                <!-- End of Topbar -->
+                {% for message in messages %}
+                    <h3>{{message}}</h3>
+                {% endfor %}
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    <!-- Page Heading -->
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h1 class="h3 mb-0 text-gray-800">Appointment Record</h1>
+                    </div>
+                    <a href="{% url 'clinic_dashboard_walkInForm' %}" type="button" class="btn btn-primary" >Add
+                    {% comment %} <button type="button" class="btn btn-primary">Add</button> {% endcomment %}
+                    </a>
+                    {% comment %} <a href="#" type="button" class="btn btn-primary" > Update </a>
+                    <a href="#" type="button" class="btn btn-primary" > Delete </a> {% endcomment %}
+                    {% comment %} <button type="button" class="btn btn-success">Update</button>
+                    <button type="button" class="btn btn-danger" id="delete-btn">Delete</button> {% endcomment %}
+
+                    <br>
+                    <br>
+
+                    {% for message in messages %}
+                        <h3>{{message}}</h3>
+                    {% endfor %}
+                    
+                    <!-- Content Row -->
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+                    <div class="row">
+                        <div class="card shadow mb-4">
+                            <div class="card-body">
+                                <label for="sortDropdown">Sort by:</label>
+                                <select id="sortDropdown" onchange="sortTable()">
+                                    <option value="status">Status</option>
+                                    <option value="patientId">Patient ID</option>
+                                    <!-- Add more options for other columns -->
+                                </select>
+                                <div class="table-responsive">
+                                    <input type="text" id="search-Bar" onkeyup="searchBar()" placeholder="Search for names.." title="Type in a name">
+                                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                        <thead>
+                                            <tr>
+                                                <!-- Add your table headers as needed -->
+                                                <th>Select All</th>
+                                                <th>Status</th>
+                                                <th>Patient ID</th>
+                                                <th>Name</th>
+                                                <th>Sex</th>
+                                                <th>Contact Number</th>
+                                                <th>Email</th>
+                                                <th>Service Requested</th>
+                                                <th>Date of Appointment</th>
+                                                <th>Patient Profile</th>
+                                            </tr>
+                                        </thead>
+                                        <tfoot>
+                                            <tr>
+                                                <!-- Add your table footer as needed -->
+                                                <th></th>
+                                                <th>Status</th>
+                                                <th>Patient ID</th>
+                                                <th>Name</th>
+                                                <th>Sex</th>
+                                                <th>Contact Number</th>
+                                                <th>Email</th>
+                                                <th>Service Requested</th>
+                                                <th>Date of Appointment and Time</th>
+                                                <th></th>
+                                            </tr>
+                                        </tfoot>
+                                        <tbody>
+                                            {% for appointment in appointments %}
+                                                {% if appointment.userID %}
+                                                    <tr> 
+                                                        <td><input type="checkbox" class="row-checkbox" data-userid="{{ appointment.userID.id }}"></td>
+                                                        <td>{{ appointment.is_Status}}</td>
+                                                        <td>{{ appointment.userID.userID }}</td>
+                                                        <td>{{ appointment.userID }}</td>
+                                                        <td>{{ appointment.userID.sex }}</td>
+                                                        <td>{{ appointment.userID.contactNum }}</td>
+                                                        <td>{{ appointment.userID.user.email }}</td>
+                                                        <td>{{ appointment.serviceID.service_Name }}</td>
+                                                        <td>{{ appointment.appoint_Date }}, {{ appointment.appt_Start_Time }}</td>
+                                                        <td>
+                                                            <a href="/view_Profile/{{ appointment.bookingID }}/">View Profile</a>
+                                                        </td>
+                                                    </tr>
+                                                {% elif appointment.walkInID %}
+                                                    <tr> 
+                                                        <td><input type="checkbox" class="row-checkbox" data-userid="{{ appointment.walkInID }}"></td>
+                                                        <td>{{ appointment.is_Status}}</td>
+                                                        <td>{{ appointment.walkInID.walkInID }}</td>
+                                                        <td>{{ appointment.walkInID }}</td>
+                                                        <td>{{ appointment.walkInID.sex }}</td>
+                                                        <td>{{ appointment.walkInID.contactNum }}</td>
+                                                        <td>{{ appointment.userID.user.email }}</td>
+                                                        <td>{{ appointment.walkInID.service_Name }}</td>
+                                                        <td>{{ appointment.appoint_Date }}, {{ appointment.appt_Start_Time }}</td>
+                                                        <td>
+                                                            <a href="/view_Profile/{{ appointment.bookingID }}/">View Profile</a>
+                                                        </td>
+                                                    </tr>
+                                                    {% endif %}
+
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+                </div>
+                <!-- /.container-fluid -->
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright &copy; Your Website 2021</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper --> 
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">X</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function searchBar() {
+          var input, filter, table, tr, td, i, txtValue;
+          input = document.getElementById("search-Bar");
+          filter = input.value.toUpperCase();
+          table = document.getElementById("dataTable");
+          tr = table.getElementsByTagName("tr");
+          for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[3];
+            if (td) {
+              txtValue = td.textContent || td.innerText;
+              if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                tr[i].style.display = "";
+              } else {
+                tr[i].style.display = "none";
+              }
+            }       
+          }
+        }
+
+        function sortTable() {
+            var table, rows, switching, i, x, y, shouldSwitch;
+            table = document.getElementById("dataTable");
+            switching = true;
+        
+            // Get the column index based on the selected option
+            var columnIndex;
+            var sortBy = document.getElementById("sortDropdown").value;
+            switch (sortBy) {
+                case "status":
+                    columnIndex = 1; // Adjust the column index based on your table structure
+                    break;
+                case "patientId":
+                    columnIndex = 2;
+                    break;
+                // Add more cases for other columns
+            }
+
+            columnIndex = columnIndex - 1;
+        
+            while (switching) {
+                switching = false;
+                rows = table.getElementsByTagName("tr");
+        
+                for (i = 1; i < (rows.length - 1); i++) {
+                    shouldSwitch = false;
+                    x = rows[i].getElementsByTagName("td")[columnIndex];
+                    y = rows[i + 1].getElementsByTagName("td")[columnIndex];
+        
+                    if (sortBy === "status") {
+                        // Convert status values to numerical for comparison
+                        x = (x.innerHTML.toLowerCase() === "accepted") ? 1 : 0;
+                        y = (y.innerHTML.toLowerCase() === "accepted") ? 1 : 0;
+                    }
+        
+                    if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                        shouldSwitch = true;
+                        break;
+                    }
+                }
+        
+                if (shouldSwitch) {
+                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                    switching = true;
+                }
+            }
+        }
+    </script>
+
+    {% comment %} <script src="{% static 'admin-tables.js' %}" ></script> {% endcomment %}
+    <script src="{% static 'sb-admin-2.js' %}" ></script>
+    <script src="{% static 'sb-admin-2.min.js' %}" ></script>
+
+    
+</body>
+</html>

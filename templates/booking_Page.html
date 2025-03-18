@@ -1,0 +1,302 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <link rel = 'stylesheet' href = {% static 'styles.css' %}>
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
+        <title>EyeLuc</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@100;200;300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet" />
+        <!-- Bootstrap icons-->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet" />
+
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.bundle.min.js"></script>
+        <!-- Bootstrap JS, including Popper.js for Bootstrap 4 or just Bootstrap Bundle JS for Bootstrap 5 -->
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+        <script src='{% static 'index.global.js' %}'></script>
+
+        <!-- Need to add another file for appointment request, kasi mag kaiba dapat ang function nila. dapat dito sa page na to ay date lang dapat ang makuha. -->
+        <script src='{% static 'bookingPage_calendar.js' %}'></script>
+
+        <style>
+            .border {          
+                width: 100%; /* Set the width of the box */
+                height: 100%;
+                /* padding: 20px; Add some padding inside the box */
+                border: 1px solid #ccc; /* Add a border around the box */
+                background-color: #f9f9f9; /* Set the background color of the box */
+                box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1); /* Add a shadow to the box */
+            }
+
+            .modal {
+                display: none;
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                padding: 20px;
+                background-color: #33E9FF;
+                border: 1px solid #0892A2;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            }
+
+        </style>
+
+ 
+
+    </head>
+    <body class="d-flex flex-column h-100">
+        {% if messages %}
+                    <script>
+                        {% for message in messages %}
+                        alert("{{ message }}");
+                        {% endfor %}
+                    </script>
+                {% endif %}
+        <main class="flex-shrink-0">            
+            <!-- Navigation-->
+            <nav class="navbar navbar-expand-lg navbar-light bg-white py-3">
+                <div class="container px-5">
+                    <a class="navbar-brand" href="{% url 'index' %}"><span class="fw-bolder text-primary">EyeLuc</span></a>
+
+                    {% if user.is_authenticated %}                        
+                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                            <ul class="navbar-nav ms-auto mb-2 mb-lg-0 small fw-bolder">
+                                <li class="nav-item"><h4>Welcome {{user_client.firstName}}</h4></li>
+                            </ul>
+                        </div>
+                    {% else %}  
+                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                            <ul class="navbar-nav ms-auto mb-2 mb-lg-0 small fw-bolder">
+                                <li class="nav-item"><h4>Unaithenticated User</h4></li>
+                            </ul>
+                        </div>
+                    {% endif %}  
+
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav ms-auto mb-2 mb-lg-0 small fw-bolder">
+                            
+                            <!-- If the user don't have an ID on clinic then they can register a clinic. the problem is what information do we need if they have really a optical clinic -->
+                            {% if user.is_superuser %}
+                                <li class="nav-item"><a class="nav-link" href=" {%url 'admin_Cregistration'%}">Register Clinic</a></li> <!-- the superadmin should only have this -->
+                                <li class="nav-item"><a class="nav-link" href="{%url 'user_profile'%}">My Profile</a></li>  <!-- Dito makikita yung info ng user and yung kan'yang schedule -->
+                                <li class="nav-item"><a class="nav-link" href="{%url 'admin_Cregistration' %}">Dashboard</a></li> 
+
+                            {% elif user.is_authenticated %}
+                                <li class="nav-item"><a class="nav-link" href="{%url 'patient_Inbox'%}">Inbox <span class="badge">2</span> </a></li>  
+                                <li class="nav-item"><a class="nav-link" href="{%url 'user_profile'%}">My Profile</a></li>  <!-- Dito makikita yung info ng user and yung kan'yang schedule -->
+                                    {% comment %} If the user have an ID on registered clinic then every time the user log in it will redirect in dashboard {% endcomment %}
+                                    {% if user_client.is_status == True %}
+                                        <li class="nav-item"><a class="nav-link" href="{%url 'dashboard' %}">Dashboard</a></li> 
+                                        {% endif %}
+                            {% endif %}
+                            
+                            <li class="nav-item"><a class="nav-link" href="{% url 'index' %}">Home</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'clinics' %}">Clinics</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{% url 'locate' %}">Locate</a></li>
+
+                            <!-- kailangan may conditional statement na mailalabas lang s'ya pag once na Admin ang naka log in -->
+                            <!-- {% comment %} <li class="nav-item"><a class="nav-link" href="{%url 'Dashboard' %}">Admin</a></li> Ito ay dapat makikita lang ni Admin {% endcomment %} -->
+                            {% if user.is_authenticated %}
+                                <li class="nav-item"><a class="nav-link" href="{%url 'logout'%}">Log Out</a></li>
+                            {% else %}
+                                <li class="nav-item"><a class="nav-link" href="{%url 'login'%}">Log In</a></li>    <!-- bakit hindi nag da-direct dun sa mismong link? -/- SOLVED! -->
+                            {% endif %}  
+                            <!-- {% comment %} <li class="nav-item"><a class="nav-link" href="login.html">Log In</a></li> {% endcomment %} -->
+                            
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+            {% comment %} <div aria-live="polite" aria-atomic="true" class="toast-container" style="position: relative; min-height: 200px;"> {% endcomment %}
+            <div aria-live="polite" aria-atomic="true"class="toast-container" style="position: fixed; top: 50px; right: 50px; min-height: 200px; z-index: 1050;">
+                <!-- Toasts will be dynamically added here by the JavaScript -->
+            </div>  
+
+            {% comment %} <div id="clinics-data" data-clinics ='{{ clinics | safe | json_script:"clinics-data" }}'></div> {% endcomment %}
+            <center>
+            <h1 class="display-6 fw-bolder mb-1"><span class="text-gradient d-inline">{{ clinic.clinicName }}</span></h1>
+            </center>
+            <!-- Header-->
+            <header class="py-5">
+
+                <form id="contactForm" method ="POST" action = " ">
+                  {% csrf_token %}
+                    <div class="container px-5 pb-5">
+                        <div class="row gx-5 align-items-center">                        
+                        
+                            <div class="col-xxl-5">
+                                <!-- Header text content-->
+                                <!-- Kailangan ko nga pala ilagay ito sa form. hatys -->
+
+                                <div class="text-center text-xxl-start">
+                                    <div class="display-2 bg-gradient-primary-to-secondary text-white mb-4 form-control"><center>Appointment Information</center></div>
+                                    <div class="fs-3 fw-light text-muted">
+                                        <label for="date">Date</label>
+                                        <!-- Dapat naka if statement dito. Kung yung current clinic ay may bakanteng oras sa ganun, etc. -->
+                                        <input type="date" id="date" name="date" class="form-control">
+                                    </div>
+                                        
+                                    <div class="fs-3 fw-light text-muted">
+                                        <label for="time">Time</label>
+                                        <select name="time" id="time" class="form-control">
+                                        </select>
+                                    </div>
+
+                                    <div class="fs-3 fw-light text-muted">
+                                        <label for="services">Services</label>
+
+                                        <select name="service" id="services" class="form-control"> 
+                                            {% for service in services %}                                            
+                                                <option value="{{ service.serviceID }}" name="{{ service.service_Name }}">{{ service.service_Name }} {{ service.serviceID }}</option>
+                                                {% endfor %}
+                                        </select>
+                                    </div>
+
+                                    <br>
+
+                                    <textarea id="w3review" name="notes" id="notes" rows="4" cols="50" class="form-control" placeholder="Notes (optional)"></textarea>
+
+                                    <br>
+                                        
+                                    <div class="d-grid gap-3 d-sm-flex justify-content-sm-center justify-content-xxl-start mb-3">
+                                        <input type = "hidden" id = "getID" value= {{ clinic.clinicID }}></input>
+                                        <input type = "submit" id = "submit" class="btn btn-primary btn-lg px-5 py-3 me-sm-3 fs-6 fw-bolder" onclick="mySubmit()"></input>
+                                        <a class="btn btn-primary btn-lg px-5 py-3 me-sm-3 fs-6 fw-bolder" href="/index_ClinicsProfile/{{ clinic.clinicID }}/">View Clinic</a>
+                                    </div>
+                                </div>
+                            </div>                            
+
+                            <div class="col-xxl-7">                            
+                                <div class="d-flex justify-content-center mt-5 mt-xxl-0 border" >
+                                    <h3>Image of the clinic here</h3>
+                                </div>
+                            </div>                        
+                        </div>
+                    </div>
+                </form>
+
+
+            </header>
+
+        </main>
+
+        <!-- Footer-->
+        <footer class="bg-white py-4 mt-auto">
+            <div class="container px-5">
+                <div class="row align-items-center justify-content-between flex-column flex-sm-row">
+                    <div class="col-auto"><div class="small m-0">Copyright &copy; Your Website 2023</div></div>
+                    <div class="col-auto">
+                        <a class="small" href="#!">Privacy</a>
+                        <span class="mx-1">&middot;</span>
+                        <a class="small" href="#!">Terms</a>
+                        <span class="mx-1">&middot;</span>
+                        <a class="small" href="#!">Contact</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                var dateInput = document.getElementById('date');
+                dateInput.addEventListener('input', function () {
+                    var selectedDate = new Date(this.value);
+                    var currentDate = new Date();
+            
+                    if (selectedDate < currentDate) {
+                        alert('Please select a future date.');
+                        this.value = ''; // Clear the input field if the date is invalid
+                    } else {
+                        // If the date is valid, generate time options
+                        generateTimeOptions();
+                    }
+                });
+            });
+            
+            // Function to generate time options dynamically
+            function generateTimeOptions() {
+                console.log("Generating time options...");
+                var selectElement = document.getElementById('time');
+            
+                // Clear existing options
+                selectElement.innerHTML = '';
+            
+                var dateInput = document.getElementById('date');
+                var clinicId = '{{ clinic.clinicID }}'; // Access clinicID from the context in your Django template
+            
+                // Make an AJAX request to the backend to get unavailable times
+                var xhr = new XMLHttpRequest();
+                xhr.open('GET', `/check_availability?clinic_id=${clinicId}&date=${dateInput.value}`, true);
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState == 4 && xhr.status == 200) {
+                        var unavailableTimes = JSON.parse(xhr.responseText);
+                        filterUnavailableTimes(unavailableTimes);
+                        console.log("Get unavailable time: " + unavailableTimes);
+                    }
+                };
+                xhr.send();
+            }
+            
+            function filterUnavailableTimes(unavailableTimes) {
+                var selectElement = document.getElementById('time');
+            
+                console.log("TESTTTTTTTTTTTTT2222");
+            
+                // Set start and end times
+                var startTime = 9;
+                var endTime = 16;
+            
+                // Create a new set of options
+                var newOptions = [];
+            
+                // Generate options
+                for (var i = startTime; i <= endTime; i++) {
+                    var optionValue = i.toString().padStart(2, '0') + ':00';
+            
+                    // Add only if not partially included in the unavailableTimes list
+                    if (!isPartiallyIncluded(unavailableTimes, optionValue)) {
+                        var option = document.createElement('option');
+                        option.value = optionValue;
+                        var endTimeString = (i + 1).toString().padStart(2, '0') + ':00';
+                        option.text = `${i}:00 - ${endTimeString}`;
+                        newOptions.push(option);
+                    }
+                }
+            
+                // Append the new set of options to the select element
+                newOptions.forEach(function (option) {
+                    selectElement.appendChild(option);
+                });
+            
+                console.log("Time generated: ");
+                console.log(selectElement.innerHTML);
+            }
+            
+            // Function to check partial inclusion
+            function isPartiallyIncluded(unavailableTimes, optionValue) {
+                return unavailableTimes.some(function (time) {
+                    return time.includes(optionValue);
+                });
+            }           
+
+        </script>
+
+        <script type="text/javascript">
+            var createMessageUrl = "{% url 'createmessage' %}";
+        </script>
+        
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <script src="{% static 'notification.js' %}">   </script>   
+        
+    </body>
+</html>

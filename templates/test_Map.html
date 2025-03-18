@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaflet Map</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+</head>
+<body>
+    <div id="map" style="height: 1000px;"></div>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+    <script>
+      var mymap = L.map('map').setView([13.937649, 121.613118], 13);
+
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '&copy; OpenStreetMap contributors'
+      }).addTo(mymap);
+
+      // Function to show marker and brief address on map click
+      function showMarkerAndAddress(e) {
+          var lat = e.latlng.lat;
+          var lon = e.latlng.lng;
+
+          // Add a marker at the clicked location
+          L.marker([lat, lon]).addTo(mymap);
+
+          // Fetch the address and display a brief version
+          fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`)
+              .then(response => response.json())
+              .then(data => {
+                  var address = data.display_name;
+                  alert("Clicked at: " + address);
+              })
+              .catch(error => console.error('Error:', error));
+      }
+
+      // Add click event listener on the map
+      mymap.on('click', showMarkerAndAddress);
+    </script>
+</body>
+</html>

@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Patient Data Report</title>
+    
+    <!-- Bootstrap CSS -->
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            {% comment %} border-left: 4px solid #3157c8; {% endcomment %}
+            border: 1px solid black;
+        }
+        
+        th, td {
+            padding: 5px;
+            padding-bottom: 1px;  
+            text-align: left;
+            box-shadow: 0 0 1px #3157c8;
+            {% comment %} border: 1px solid red; {% endcomment %}
+        }
+
+        td {
+            text-align: center;
+
+        }
+
+        tr{
+            margin: 4px;
+            {% comment %} box-shadow: 0 0 1px #3157c8; {% endcomment %}
+        }
+
+        {% comment %} th {
+            background: gray;
+            color: white;
+            border-right: 1px solid #3157c8;           
+        } {% endcomment %}
+
+        .title {
+            padding: 5px 8px;
+            background: #3157c8;
+            color: white;
+            {% comment %} border-right: 1px solid #3157c8; {% endcomment %}
+            {% comment %} font-weight: bold; {% endcomment %}
+            font-size: large; 
+            text-align: center;
+
+        }
+
+        .Head {
+            display: flex;
+            justify-content: space-between; /* This will push the h1 elements to opposite ends */
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .Head h1 {
+            margin: 0; /* Remove default margin */
+        }
+
+
+        @page {
+            size : A4 portrait;
+
+            @frame content_frame {
+                left : 20pt;
+                right : 20pt;
+                top : 20pt;
+                bottom : 20pt;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class = "Head">
+        <h1 >Eye Luc</h1>
+        <h1 >Clinic Name: <span style = "font-style: italic"> {{ clinicID }} </span> </h1>
+    </div>
+
+    <div id="wrapper">
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+            <!-- Main Content -->
+            <div id="content">
+                <div class="container-fluid">
+
+    
+                    <div class="d-flex align-items-center justify-content-center" >
+                        <div class=" rounded bg-white mt-2 mb-5 shadow  px-5 mt" style = "width: 150vh;" >
+                            
+                            <div class="row"> 
+                                <div class="col col-lg-15"> 
+
+                                    <div class="row offset-row">
+                                        <div class="col-md ">
+                                            <div class="px-1 py-3">
+                                                <div class=" d-flex justify-content-between align-items-center mb">
+                                                    <h1 class="title text-right" >Patient Profile</h1>
+                                                </div>
+                                                <hr>
+
+                                                <div name = "patient-profile"  class="px-2 py-2" id = "patient-profile" >
+                                                    <table>
+                                                        <tr>
+                                                            <td> Patient Name: </td>
+                                                            <td> {{ userID }} </td>
+                                                            <td> Civil Status: </td>
+                                                            <td> {{ addInfo.civilStatus }} </td>
+                                                        </tr>
+
+                                                        <tr>
+                                                            <td> Age: </td>
+                                                            <td> {{ userID.age }} </td>
+                                                            <td> Ocupation </td>
+                                                            <td> {{ addInfo.Occupation }} </td>
+                                                        </tr>
+
+                                                        <tr>
+                                                            <td> Birthday: </td>
+                                                            <td> {{ userID.bday }} </td>
+                                                            <td> Home Address: </td>
+                                                            <td> {{ userID.homeAddress }} </td>
+                                                        </tr>
+
+                                                        <tr>
+                                                            <td> Sex: </td>
+                                                            <td> {{ userID.sex }} </td>
+                                                            <td> Contact Number </td>
+                                                            <td> {{ userID.contactNum }} </td>
+                                                        </tr>
+
+                                                    </table>
+                                                    
+                                                    {% if get_AllMedHis is not None %}
+                                                        <div class=" d-flex justify-content-between align-items-center mb">
+                                                            <h1 class="title text-right">Medical History</h1>
+                                                        </div>
+                                                        <hr>
+
+                                                        {% for record in get_AllMedHis %}
+                                                            <table class="medicalhistory">
+
+                                                                
+                                                                <tr class = "title">
+                                                                    <td  colspan="4">Diagnosed Health Problem</td>
+                                                                </tr>
+
+                                                                {% if record.is_Hypertention and record.is_HeartProblem and record.is_Diabetes and record.is_Stroke and record.is_Asthma and record.otherDiagnosedHealth != True %}
+                                                                        <tr colspan = "4">
+                                                                            <td> No Record </td>
+                                                                        </tr>
+                                                                {% endif %}
+
+                                                                {% if record.is_Hypertention or record.is_HeartProblem or record.is_Diabetes or record.is_Stroke == True %}
+                                                                    <tr>
+                                                                        {% if record.is_Hypertention == True %}
+                                                                            <td> Hypertention </td>
+                                                                        {% endif %}
+
+                                                                        {% if record.is_HeartProblem == True %}
+                                                                            <td> Heart Problem</td>
+                                                                        {% endif %}
+
+                                                                        {% if record.is_Diabetes == True %}
+                                                                            <td> Diabetes</td>
+                                                                        {% endif %}
+
+                                                                        {% if record.is_Stroke == True %}
+                                                                            <td> Stroke</td>
+                                                                        {% endif %}
+                                                                    </tr>
+                                                                {% endif %}
+
+
+                                                                {% if record.is_Asthma or record.otherDiagnosedHealth == True %}
+                                                                    <tr>
+                                                                        {% if record.is_Asthma == True %}
+                                                                            <td> Asthma</td>
+                                                                        {% endif %}
+
+                                                                        {% if record.otherDiagnosedHealth == True %}
+                                                                            <td> Other </td>
+                                                                        {% endif %}
+                                                                    </tr>
+                                                                {% endif %}
+                
+                                                                
+                                                                <tr class = "title">
+                                                                    <td  colspan="4">Habits</td>
+                                                                </tr>
+
+                                                                {% if record.is_Smoking and record.is_Alcohol  != True %}
+                                                                        <tr colspan = "4">
+                                                                            <td> No Record </td>
+                                                                        </tr>
+                                                                {% endif %}
+
+                                                                <tr>
+                                                                    {% if record.is_Smoking == True %}
+                                                                        <td> Smoking </td>
+                                                                    {% endif %}
+
+                                                                    {% if record.is_Alcohol == True %}
+                                                                        <td> Alcohol</td>
+                                                                    {% endif %}
+                                                                </tr>
+                
+                                                                
+                                                                <tr class = "title">
+                                                                    <td  colspan="4">Allergies</td>
+                                                                </tr>
+
+                                                                {% if record.medicinesAller and record.foodsAller and record.otherAller is None and record.medicinesAller and record.foodsAller and record.otherAller != '' %}
+                                                                        <tr colspan = "4">
+                                                                            <td> No Record </td>
+                                                                        </tr>
+                                                                {% endif %}
+
+                                                                <tr>
+                                                                    {% if record.medicinesAller is not None and record.medicinesAller != ''  %}
+                                                                        <td>Medicines: {{ record.medicinesAller }}</td>
+                                                                    {% endif %}
+
+                                                                    {% if record.foodsAller is not None and record.foodsAller != '' %}
+                                                                        <td>Foods: {{ record.foodsAller }}</td>
+                                                                    {% endif %}
+
+                                                                    {% if record.otherAller is not None and record.otherAller != ''  %}
+                                                                        <td>Others: {{ record.otherAller }}</td>
+                                                                    {% endif %}
+                                                                    {% comment %} <td>Stroke</td> {% endcomment %}
+                                                                </tr>
+                
+                                                                
+                                                                <tr class = "title">
+                                                                    <td  colspan="4">Eye History</td>
+                                                                </tr>
+
+                                                                {% if record.is_Cataract and record.is_Glaucama and record.is_RetinalDisease and record.is_Astigmatism and record.is_MacularDegeneration and record.is_DiabeticRetinopathy and record.is_DryEyeSyndrome and record.is_Strabismus and record.is_ColorBlindness and record.is_Keratoconus and record.is_Uveitis and record.othersEyeHis == False  %}
+                                                                        <tr colspan = "4">
+                                                                            <td> No Record </td>
+                                                                        </tr>
+                                                                {% endif %}
+
+                                                                {% if record.is_Cataract or record.is_Glaucama or record.is_RetinalDisease or record.is_Astigmatism == True %}
+                                                                    <tr>
+                                                                        {% if record.is_Cataract == 'True' %}
+                                                                            <td>Cataract</td>
+                                                                        {% endif %}
+
+                                                                        {% if record.is_Glaucama == 'True' %}
+                                                                            <td>Glaucoma</td>
+                                                                        {% endif %}
+
+                                                                        {% if record.is_RetinalDisease == 'True' %}
+                                                                            <td>Retinal Disease</td>
+                                                                        {% endif %}
+
+                                                                        {% if record.is_Astigmatism == 'True' %}
+                                                                        <td>Astigmatism</td>
+                                                                        {% endif %}
+                                                                    </tr>
+                                                                {% endif %}
+                
+                                                                {% if record.is_MacularDegeneration or record.is_DiabeticRetinopathy or record.is_DryEyeSyndrome or record.is_Strabismus == True %}
+                                                                    <tr>
+                                                                        {% if record.is_MacularDegeneration == 'True' %}
+                                                                            <td>Macular Degeneration</td>
+                                                                        {% endif %}
+
+                                                                        {% if record.is_DiabeticRetinopathy == 'True' %}
+                                                                            <td>Diabetic Retinopathy</td>
+                                                                        {% endif %}
+
+                                                                        {% if record.is_DryEyeSyndrome == 'True' %}
+                                                                            <td>Dry Eye Syndrome</td>
+                                                                        {% endif %}
+
+                                                                        {% if record.is_Strabismus == 'True' %}
+                                                                            <td>Strabismus</td>
+                                                                        {% endif %}
+                                                                    </tr>
+                                                                {% endif %}
+
+                                                                {% if record.is_ColorBlindness or record.is_Keratoconus or record.is_Uveitis or record.othersEyeHis == True %}
+                                                                    <tr>
+                                                                        {% if record.is_ColorBlindness == 'True' %}
+                                                                            <td>Color Blindness</td>
+                                                                        {% endif %}
+
+                                                                        {% if record.is_Keratoconus == 'True' %}
+                                                                            <td>Keratoconus</td>
+                                                                        {% endif %}
+
+                                                                        {% if record.is_Uveitis == 'True' %}
+                                                                            <td>Uveitis</td>
+                                                                        {% endif %}
+
+                                                                        {% if record.othersEyeHis == 'True' %}
+                                                                            <td>Other</td>
+                                                                        {% endif %}
+                                                                    </tr>
+                                                                {% endif %}
+                                
+                                                                
+                                                                <tr class = "title">
+                                                                    <td  colspan="4">Previous Eye Surgeries</td>
+                                                                </tr>
+
+                                                                {% if record.eyeSurgeries == '' or record.eyeSurgeries is None %}
+                                                                    <tr colspan = "4">
+                                                                        <td> No Record </td>
+                                                                    </tr>
+                                                                {% elif record.eyeSurgeries is not None %}
+
+                                                                    <tr>
+                                                                        <td  colspan="4">{{ record.eyeSurgeries }}</td>
+                                                                    </tr>
+                                                                        
+                                                                {% endif %}
+                                                                
+                                                                <tr  class = "title">
+                                                                    <td  colspan="4">Family History</td>
+                                                                </tr>
+                                                                {% if record.is_GlaucamaF and record.is_HypertentionF and record.is_Blindness and record.is_DiabetesF and record.is_CataractF != 'True' %}
+                                                                    <tr colspan = "4">
+                                                                        <td> No Record </td>
+                                                                    </tr>
+                                                                {% endif %}
+
+                                                                {% if record.is_GlaucamaF or record.is_HypertentionF or record.is_Blindness or record.is_DiabetesF  == True %}
+                                                                    <tr>
+                                                                        {% if record.is_GlaucamaF == True %}
+                                                                            <td>Glaucoma</td>
+                                                                        {% endif %}
+
+                                                                        {% if record.is_HypertentionF == True %}
+                                                                            <td>Hypertention</td>
+                                                                        {% endif %}
+
+                                                                        {% if record.is_Blindness == True %}
+                                                                            <td>Blindness</td>
+                                                                        {% endif %}
+
+                                                                        {% if record.is_DiabetesF == True %}
+                                                                            <td>Diabetes</td>
+                                                                        {% endif %}
+                                                                    </tr>
+                                                                {% endif %}
+
+                                                                {% if record.is_CataractF == True %}
+                                                                    <tr>
+                                                                        <td >Cataract</td>
+                                                                    </tr>
+                                                                {% endif %}
+
+                
+                                                            </table>
+                                                        {% endfor %}
+
+                                                    {% endif %}
+
+                                                    <div class=" d-flex justify-content-between align-items-center mb">
+                                                        <h1 class="title text-right">Clinical Observation</h1>
+                                                    </div>
+                                                    <hr>
+                                                    {% if get_AllOHE is None and get_AllDET is None and get_AllRefra is None %}
+                                                        <div class="d-flex justify-content-between align-items-center mb">
+                                                            <h1 class="title text-right">No Record</h1>
+                                                        </div>
+                                                    {% endif %} 
+
+                                                    {% if get_AllOHE is not None and get_AllOHE %}
+                                                        {% for record in get_AllOHE %}
+                                                            <table class="hideOCHE" style = "text-align: center;">
+                                                                {% comment %} <h1>{{ ocular.oheID }}</h1>
+                                                                <h1>{{ ocular.od_Lids_Lashes }}</h1> {% endcomment %}
+
+                                                                <tr  class="title ocularAllignment" colspan = "3">
+                                                                    <th colspan = "3"><h1>Ocular Health Examination</h1></th>
+                                                                </tr> 
+                                                                <tr  class="title ocularAllignment" >
+                                                                    <th>OD:</th>
+                                                                    <th>Title</th>
+                                                                    <th>OS</th>
+                                                                </tr>            
+                                                                
+                                                                <tr   class="ocularAllignment">
+                                                                    <td> {{ record.od_Lids_Lashes }} </td>
+                                                                    <td>Lids & Lashes</td>
+                                                                    <td> {{ record.os_Lids_Lashes }} </td>
+                                                                </tr>
+
+                                                                <tr class="ocularAllignment">
+                                                                    <td> {{ record.od_Bulbar }} </td>
+                                                                    <td>Bulbar Conjuctivia</td>
+                                                                    <td> {{ record.os_Bulbar }} </td>
+                                                                </tr>
+
+                                                                <tr class="ocularAllignment">
+                                                                    <td> {{ record.od_Palpebral }} </td>
+                                                                    <td>Palpebral Conjuctiva</td>
+                                                                    <td> {{ record.os_Palpebral }} </td>
+                                                                </tr>
+
+                                                                <tr class="ocularAllignment">
+                                                                    <td> {{ record.od_Cornea }} </td>
+                                                                    <td>Cornea</td>
+                                                                    <td> {{ record.os_Cornea }} </td>
+                                                                </tr>
+
+                                                                <tr class="ocularAllignment">
+                                                                    <td> {{ record.od_ChamgerAngle }} </td>
+                                                                    <td>Amt. Chamber Angle</td>
+                                                                    <td> {{ record.os_ChamgerAngle }} </td>
+                                                                </tr>
+
+                                                                <tr class="ocularAllignment">
+                                                                    <td> {{ record.od_Iris }} </td>
+                                                                    <td>Iris</td>
+                                                                    <td> {{ record.os_Iris }} </td>
+                                                                </tr>
+
+                                                                <tr class="ocularAllignment">
+                                                                    <td> {{ record.od_Lens }} </td>
+                                                                    <td>Lens</td>
+                                                                    <td> {{ record.os_Lens }} </td>
+                                                                </tr>
+
+                                                                <tr class="ocularAllignment">
+                                                                    <td> {{ record.od_Tonometry }} </td>
+                                                                    <td>TONOMETRY</td>
+                                                                    <td> {{ record.os_Tonometry }} </td>
+                                                                </tr>                                                        
+                                                            </table>
+                                                        {% endfor %}
+                                                    {% endif %}
+
+
+                                                    {% if get_AllDET is not None and get_AllDET %}
+                                                        {% for record in get_AllDET %}
+                                                            <table class="hideTable">
+                                                                <tr  class="title ocularAllignment" colspan = "3">
+                                                                    <th colspan = "3"><h1>Dry Eye Test</h1></th>
+                                                                </tr> 
+
+                                                                <tr class="title">
+                                                                    <th class="firstColDried">Date:</th>
+                                                                    <th>OD</th>
+                                                                    <th>OS</th>
+                                                                </tr>
+                    
+                                                                {% comment %} {% for dried in dry %} {% endcomment %}
+                                                                    <tr>
+                                                                        <td class="firstColDried">{{ record.dateRecorded }} </td>
+                                                                        <td>{{ record.od_DryEye }} </td>
+                                                                        <td>{{ record.os_DryEye }} </td>
+                                                                    </tr>
+                                                                {% comment %} {% endfor %} {% endcomment %}
+                                                            </table>
+                                                        {% endfor %}
+                                                    {% endif %}
+
+                                                    {% if get_AllRefra is not None and get_AllRefra %}
+                                                        {% for record in get_AllRefra %}
+                                                            <table class="Refraction" >
+
+                                                                <tr  class="title ocularAllignment" colspan = "3">
+                                                                    <th colspan = "3"><h1>Refraction</h1></th>
+                                                                </tr>   
+                                                            
+                                                                <tr>
+                                                                    <th> SUBJECTIVE REFRACTION </th>
+                                                                    <th>VA</th>
+                                                                    <th>PD</th>
+                                                                    <th>AUTOMATED REFRACTION</th>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td> OD {{ record.subRef_OD }}</td>
+                                                                    <td> {{ record.va_OD }} </td>
+                                                                    <td> {{ record.pd_OD }} </td>
+                                                                    <td>OD {{ record.autRef_OD }} </td>
+                                                                </tr>
+            
+                                                                <tr>
+                                                                    <td> OS {{ record.subRef_OS }}</td>
+                                                                    <td> {{ record.va_OS }} </td>
+                                                                    <td> {{ record.pd_OS }} </td>
+                                                                    <td>OS {{ record.autRef_OS }} </td>
+                                                                </tr>
+            
+                                                                <tr>
+                                                                    <td colspan = "4"> </td>                                                        
+                                                                </tr>
+            
+                                                                <tr>
+                                                                    <th> NEAR ADD </th>
+                                                                    <th colspan = "3">REMARKS</th>
+                                                                </tr>
+            
+                                                                <tr >
+                                                                    <td> {{ record.od_Refraction }} </td>
+                                                                    <td colspan = "3" row = "2"> {{ record.remarks_Refraction }} </th>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td> {{ record.os_Refraction }} </td>
+                                                                </tr>
+            
+                                                            </table>
+                                                        {% endfor %}
+                                                    {% endif %}
+
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+                    </div>
+
+
+</body>
+</html>

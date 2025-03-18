@@ -1,0 +1,132 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <link rel = 'stylesheet' href = {% static 'styles.css' %}>
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
+        <title>EyeLuc</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@100;200;300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet" />
+        <!-- Bootstrap icons-->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet" />
+        <!-- <script src="{% static 'script_map.js' %}" ></script> -->
+
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.bundle.min.js"></script>
+        <!-- Bootstrap JS, including Popper.js for Bootstrap 4 or just Bootstrap Bundle JS for Bootstrap 5 -->
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+        <!-- POTAENA BAKIT HINDI KA NAGANA SA LABAS?????????? -->
+        <style>
+            #map{ 
+                width: 100%;
+                height: 65vh;
+            }            
+        </style>
+
+    </head>
+    <body class="d-flex flex-column h-100">
+        <main class="flex-shrink-0">
+            
+            <!-- Navigation-->
+            <nav class="navbar navbar-expand-lg navbar-light bg-white py-3">
+                <div class="container px-5">
+                    <a class="navbar-brand" href="{% url 'index' %}"><span class="fw-bolder text-primary">EyeLuc</span></a>
+                    {% if user.is_authenticated %}                        
+                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                            <ul class="navbar-nav ms-auto mb-2 mb-lg-0 small fw-bolder">
+                                <li class="nav-item"><h4>Welcome {{user_client.firstName}}</h4></li>
+                            </ul>
+                        </div>
+                    {% endif %}  
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav ms-auto mb-2 mb-lg-0 small fw-bolder">
+
+                            
+
+                            <!-- If the user don't have an ID on clinic then they can register a clinic. the problem is what information do we need if they have really a optical clinic -->
+                            {% if user.is_superuser %}
+                                {% comment %} <li class="nav-item"><a class="nav-link" href=" {%url 'admin_Cregistration'%}">Register Clinic</a></li> <!-- the superadmin should only have this --> {% endcomment %}
+                                <li class="nav-item"><a class="nav-link" href="{%url 'user_profile'%}">My Profile</a></li>  <!-- Dito makikita yung info ng user and yung kan'yang schedule -->
+                                <li class="nav-item"><a class="nav-link" href="{%url 'admin_Cregistration' %}">Dashboard</a></li> 
+
+                            {% elif user.is_authenticated %}
+                                <li class="nav-item"><a class="nav-link" href="{%url 'patient_Inbox'%}">Inbox <span class="badge">2</span> </a></li>  
+                                <li class="nav-item"><a class="nav-link" href="{%url 'user_profile'%}">My Profile</a></li>  <!-- Dito makikita yung info ng user and yung kan'yang schedule -->
+                                    {% comment %} If the user have an ID on registered clinic then every time the user log in it will redirect in dashboard {% endcomment %}
+                                    {% if user_client.is_status == True %}
+                                        <li class="nav-item"><a class="nav-link" href="{%url 'dashboard' %}">Dashboard</a></li> 
+                                        {% endif %}
+                            {% endif %}
+                            
+                            <li class="nav-item"><a class="nav-link" href="{% url 'index' %}">Home</a></li>
+                            
+                            {% if userType == None  %}   
+                                {% if not user.is_superuser  %}                              
+                                    <li class="nav-item"><a class="nav-link" href="{% url 'clinics' %}">Clinics</a></li>
+                                {% endif %}
+                            {% endif %}
+
+                            <li class="nav-item"><a class="nav-link" href="{% url 'locate' %}">Locate</a></li>
+
+                            <!-- kailangan may conditional statement na mailalabas lang s'ya pag once na Admin ang naka log in -->
+                            <!-- {% comment %} <li class="nav-item"><a class="nav-link" href="{%url 'Dashboard' %}">Admin</a></li> Ito ay dapat makikita lang ni Admin {% endcomment %} -->
+                            {% if user.is_authenticated %}
+                                <li class="nav-item"><a class="nav-link" href="{%url 'logout'%}">Log Out</a></li>
+                            {% else %}
+                                <li class="nav-item"><a class="nav-link" href="{%url 'login'%}">Log In</a></li>    <!-- bakit hindi nag da-direct dun sa mismong link? -/- SOLVED! -->
+                            {% endif %}  
+                            <!-- {% comment %} <li class="nav-item"><a class="nav-link" href="login.html">Log In</a></li> {% endcomment %} -->
+                            
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+            {% comment %} <div aria-live="polite" aria-atomic="true" class="toast-container" style="position: relative; min-height: 200px;"> {% endcomment %}
+                <div aria-live="polite" aria-atomic="true"class="toast-container" style="position: fixed; top: 50px; right: 50px; min-height: 200px; z-index: 1050;">
+                    <!-- Toasts will be dynamically added here by the JavaScript -->
+                </div>  
+
+            {% comment %} <div id="clinics-data" data-clinics='{{ clinics | safe | json_script:"clinics-data" }}'></div> {% endcomment %}
+
+            <div class="container px-5 pb-5">
+                <div id="map"></div>
+            </div>
+
+        </main>
+
+        <!-- Footer-->
+        <footer class="bg-white py-4 mt-auto">
+            <div class="container px-5">
+                <div class="row align-items-center justify-content-between flex-column flex-sm-row">
+                    <div class="col-auto"><div class="small m-0">Copyright &copy; Your Website 2023</div></div>
+                    <div class="col-auto">
+                        <a class="small" href="#!">Privacy</a>
+                        <span class="mx-1">&middot;</span>
+                        <a class="small" href="#!">Terms</a>
+                        <span class="mx-1">&middot;</span>
+                        <a class="small" href="#!">Contact</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        
+        <script type="text/javascript">
+            var createMessageUrl = "{% url 'createmessage' %}";
+        </script>
+        
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <script src="{% static 'notification.js' %}">   </script>  
+
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+        <script src="{% static 'script_map.js' %}" ></script>
+
+    </body>
+</html>

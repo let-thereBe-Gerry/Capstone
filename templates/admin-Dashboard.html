@@ -1,0 +1,823 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel = 'stylesheet' href = {% static 'sb-admin-2.min.css' %}>
+    <link rel = 'stylesheet' href = {% static 'styles.css' %}>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>    
+    <script src="https://cdn.anychart.com/releases/8.10.0/js/anychart-core.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/8.10.0/js/anychart-pie.min.js"></script>
+    
+
+    <title>Dashboard</title>
+
+    <!-- Custom fonts for this template-->
+    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+
+    <style> 
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .max-height-300 {
+            max-height: 550px;
+        }
+
+        .ageNSex, .commonOccu, .commonCases { 
+            width: 100%; 
+            height: 100%; 
+            margin: 0; 
+            padding: 0;
+            min-height: 250px; 
+        } 
+
+        #ageNSex, #commonOccu, #commonCases {
+            width: 100%; 
+            height: 270px; 
+            color: black;
+        }
+
+    </style>
+    </head>
+
+
+    <body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+            <!-- Sidebar - Brand -->
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{% url 'index'%}">
+                <div class="sidebar-brand-icon rotate-n-15">
+                    <i class="fas fa-laugh-wink"></i>
+                </div>
+                <div class="sidebar-brand-text mx-3">EyeLuc </div>
+            </a>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0">
+
+            <!-- Nav Item - Dashboard -->
+            <li class="nav-item active">
+                <a class="nav-link" href="{%url 'admin_Dashboard' %}">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Home</span></a> <!-- This will bring them on homepage of the website -->
+            </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider"> <!-- Ito yung parang may dash -->
+
+            <li class="nav-item active">
+                <a class="nav-link" href="{%url 'admin_Clinics_Table' %}">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Clinics</span></a>
+            </li>
+
+            <hr class="sidebar-divider">
+
+            <li class="nav-item active">
+            <a class="nav-link" href="{%url 'admin_Opthal' %}">
+                <i class="fas fa-fw fa-tachometer-alt"></i>
+                <span>Opthamologist</span></a>
+            </li> 
+
+            <hr class="sidebar-divider">
+
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'admin_Users'%}">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>User</span></a> <!-- In admin side, it should show all the user account -->
+            </li>
+
+            <hr class="sidebar-divider">
+
+            <li class="nav-item active">
+                <a class="nav-link" href="">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Profile</span></a>
+            </li>
+            
+            <hr class="sidebar-divider">
+            
+            <!-- Sidebar Toggler (Sidebar) -->
+            {% comment %} <div class="text-center d-none d-md-inline">
+                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+            </div> {% endcomment %}
+
+            <div class="sidebar-brand d-flex align-items-center justify-content-center">                
+                <a type="button" href="{%url 'logout'%}"><button>Log Out</button></a> 
+            </div>
+        </ul>
+        <!-- End of Sidebar --> 
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                    <h1 class="h3 mb-0 text-gray-800 px-4">Dashboard</h1>
+                </nav>                
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    <!-- Page Heading -->                    
+                    
+                    
+
+                    <div class="row"  style = "text-align: center">  
+                        
+                        <div class="col-md-2 "> 
+                            <div class="card shadow mb-4" >
+                                <div class="card-body align-items-center" id="overview-container"> 
+                                    <p>Total Number of Registered Clinic</p>                                    
+                                    <h2 class="m-0 font-weight-bold " > - {{ clinic_count }} - </h2>                                    
+                                </div>                       
+                            </div>
+                        </div> 
+
+                        <div class="col-md-2 "> 
+                            <div class="card shadow mb-4" >
+                                <div class="card-body align-items-center" id="overview-container"> 
+                                    <p>Total Number of Registered Patient</p>                                    
+                                    <h2 class="m-0 font-weight-bold " > - {{ patient_count }} - </h2>                                    
+                                </div>                       
+                            </div>
+                        </div> 
+                        
+                        <div class="col-md-2 "> 
+                            <div class="card shadow mb-4" >
+                                <div class="card-body align-items-center" id="overview-container"> 
+                                    <p>Total Number of Walk In</p>                                    
+                                    <h2 class="m-0 font-weight-bold " > - {{ patient_count }} - </h2>                                    
+                                </div>                       
+                            </div>
+                        </div> 
+                        
+                        <div class="col-md-2 "> 
+                            <div class="card shadow mb-4" >
+                                <div class="card-body align-items-center" id="overview-container"> 
+                                    <p class="m-0 font-weight-bold text-primary">  </p>                                    
+                                </div>                       
+                            </div>
+                        </div> 
+                        <div class="col-md-2 "> 
+                            <div class="card shadow mb-4" >
+                                <div class="card-body align-items-center" id="overview-container"> 
+                                    <p class="m-0 font-weight-bold ">Most Cases</p>                                    
+                                    {% comment %} <canvas id="clinicRate" width="600" height="200" style="margin-bottom: 30px; max-height: 250px;" ></canvas> {% endcomment %}
+                                </div>                       
+                            </div>
+                        </div>            
+                        
+                        <div class="col-md-2 "> 
+                            <div class="card shadow mb-4" >
+                                <div class="card-body align-items-center" id="overview-container"> 
+                                    <p class="m-0 font-weight-bold ">Total Number of Walk In Patient</p>                                    
+                                </div>                       
+                            </div>
+                        </div> 
+
+                    </div>
+
+                    <div class="row">    
+
+                        <div class="col-md-4 "> 
+                            <div class="card shadow mb-4" >
+                                <div class="card-header d-flex flex-row align-items-center justify-content-between">
+                                    <h4 class="m-0 font-weight-bold ">Most Diagnosed Health Cases</h4>                                    
+                                </div>     
+                                <div class="card-body ageNSex" id="overview-container"> 
+                                    <div id="ageNSex" > </div>
+                                </div>                       
+                            </div>
+                        </div> 
+                        
+                        <div class="col-md-4 "> 
+                            <div class="card shadow mb-4" >
+                                <div class="card-header d-flex flex-row align-items-center justify-content-between">
+                                    <h4 class="m-0 font-weight-bold ">Common Occupation of the Patient</h4>                                    
+                                </div> 
+    
+                                <div class="card-body commonOccu" id="overview-container"> 
+                                    <div id="commonOccu" > </div>
+                                </div>                       
+                            </div>
+                        </div> 
+
+                        <div class="col-md-4 "> 
+                            <div class="card shadow mb-4" >
+                                <div class="card-header d-flex flex-row align-items-center justify-content-between">
+                                    <h4 class="m-0 font-weight-bold ">Common Cases of Eye Conditions</h4>                                    
+                                </div> 
+    
+                                <div class="card-body commonCases" id="overview-container"> 
+                                    <div id="commonCases" > </div>
+                                </div>                       
+                            </div>
+                        </div> 
+
+
+                    </div> 
+
+                    
+                    <div class="row">                    
+                         
+
+                        <div class="col-md-6 "> 
+                            <div class="card shadow mb-4" >
+                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                    <h4 class="m-0 font-weight-bold ">Most Common Allergies Cases</h4>                                    
+                                </div> 
+                                <div class="card-body patientAllergies" id="overview-container"> 
+                                    <canvas id="patientAllergies" width="600" height="200" style="margin-bottom: 30px; max-height: 250px;" ></canvas>
+                                    {% comment %} <div id="patientAllergies" > </div> {% endcomment %}
+                                </div>                        
+                            </div>
+                        </div>         
+                        
+                        
+                        <div class="col-md-6 "> 
+                            <div class="card shadow mb-4" >
+                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                    <h4 class="m-0 font-weight-bold ">Patient's Habit over the year</h4>                                    
+                                </div> 
+                                <div class="card-body" id="overview-container"> 
+                                    <canvas id="patientHabit" width="600" height="200" style="margin-bottom: 30px; max-height: 250px;" ></canvas>
+
+                                </div>                       
+                            </div>
+                        </div>
+                       
+                    </div>
+                    
+                    <div class="row">
+
+                        <div class="col-md-6 "> 
+                            <div class="card shadow mb-4" >
+                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                    <h4 class="m-0 font-weight-bold ">Top 10 patient demographics</h4>                                    
+                                </div> 
+
+                                <div class="card-body" id="overview-container"> 
+                                    <canvas id="patientPlaces" width="600" height="200" style="margin-bottom: 30px; max-height: 250px;" ></canvas>
+                                </div>                       
+                            </div>
+                        </div>  
+
+                        <div class="col-md-6 "> 
+                            <div class="card shadow mb-4" >
+                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                    <h4 class="m-0 font-weight-bold ">Average Monthly Age of Patients' Visits</h4>                                    
+                                </div> 
+
+                                <div class="card-body" id="overview-container"> 
+                                    <canvas id="ageChart" width="600" height="200" style="margin-bottom: 30px; max-height: 250px;" ></canvas>
+                                </div>                       
+                            </div>
+                        </div>                            
+                        
+                    </div>
+
+                    <div class="row">
+                        
+                        <div class="col-md-6 "> 
+                            <div class="card shadow mb-4" >
+                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                    <h4 class="m-0 font-weight-bold ">Mothly Patient Visits</h4>                                    
+                                </div> 
+
+                                <div class="card-body" id="overview-container"> 
+                                    <canvas id="monthlyAppointmentsChart" width="600" height="200" style="margin-bottom: 30px; max-height: 250px;" ></canvas>
+                                </div>                       
+                            </div>
+                        </div>   
+
+
+                    </div>
+
+                </div>
+                <!-- /.container-fluid -->
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright &copy; Your Website 2021</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper --> 
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">X</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        anychart.onDocumentReady(function () {
+            // Common Eye Problem
+            console.log('{{ eyeProbList|safe }}');
+            
+            // Directly injecting the JSON string and parsing it
+            var eyeProbList = JSON.parse('{{ eyeProbList|safe }}');
+    
+            // Transforming the object into an array format that AnyChart can understand
+            var data = [];
+            for (var problem in eyeProbList) {
+                data.push({x: problem, value: eyeProbList[problem]});
+            }
+    
+            // Proceed with creating the chart using the 'data' array
+            var chart = anychart.pie(data);
+            
+            // set the chart radius making a donut chart
+            chart.innerRadius('55%');
+    
+            // create a color palette
+            var palette = anychart.palettes.distinctColors();
+
+            data.forEach(function(item, index) {
+                palette.items().push({ color: getRandomColor() }); // You can replace getRandomColor() with your color selection logic
+            });
+          
+            // apply the donut chart color palette
+            chart.palette(palette);
+            
+            // set the position of labels
+            chart.labels().useHtml(true).format('<span style="color: #000;">{%x} — {%PercentValue}  %</span>');
+    
+            // enable the legend and position it
+            chart.legend().enabled(true).positionMode('outside');
+    
+            // format the donut chart tooltip
+            chart.tooltip().format('Percentage: {%PercentValue}%');
+
+            // create a standalone label
+            {% comment %} var label = anychart.standalones.label();
+
+            // configure the label settings
+            label
+                .useHtml(true)
+                .text(
+                //'<span style = "color: #313136; font-size:12px;">Global Market Share of <br/> Music Streaming Apps</span>' +
+                '</br><span style="color:#444857; font-size: 10px;"><i>This graph shows what is <br> the  occupation <br> of all the patient</i></span>'
+                )
+                .position('center')
+                .anchor('center')
+                .hAlign('center')
+                .vAlign('middle');
+            
+            // set the label as the center content
+            chart.center().content(label); {% endcomment %}
+            
+            // set container id for the chart
+            chart.container('ageNSex');
+            
+            // initiate chart drawing
+            chart.draw();
+        });
+
+        // Function to generate a random color
+    function getRandomColor() {
+        var letters = '0123456789ABCDEF';
+        var color = '#';
+        for (var i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
+    </script> 
+
+    <script>
+        anychart.onDocumentReady(function () {
+            // Common Eye Problem
+            console.log('{{ occupationList_json|safe }}');
+            
+            // Directly injecting the JSON string and parsing it
+            var eyeProbList = JSON.parse('{{ occupationList_json|safe }}');
+    
+            // Transforming the object into an array format that AnyChart can understand
+            var data = [];
+            for (var problem in eyeProbList) {
+                data.push({x: problem, value: eyeProbList[problem]});
+            }
+    
+            // Proceed with creating the chart using the 'data' array
+            var chart = anychart.pie(data);
+            
+            // set the chart radius making a donut chart
+            chart.innerRadius('80%');
+    
+            // create a color palette
+            var palette = anychart.palettes.distinctColors();
+           
+            // set the colors according to the brands
+            /*
+            palette.items([
+                { color: '#471c18' },
+                { color: '#f6d696' },
+                { color: '#e58442' },
+                { color: '#f0b66b' },
+                { color: '#cb5d18' },
+                { color: '#9c5936' }
+            ]);
+            */
+
+            data.forEach(function(item, index) {
+                palette.items().push({ color: getRandomColor() }); // You can replace getRandomColor() with your color selection logic
+            });
+          
+            // apply the donut chart color palette
+            chart.palette(palette);
+            
+            // set the position of labels
+            chart.labels().useHtml(true).format('<span style="color: #000;">{%x} — {%PercentValue}  %</span>');
+    
+            // enable the legend and position it
+            chart.legend().enabled(true).positionMode('outside');
+    
+            // format the donut chart tooltip
+            chart.tooltip().format('Percentage: {%PercentValue}%');
+
+            // create a standalone label
+            var label = anychart.standalones.label();
+
+            // configure the label settings
+            label
+                .useHtml(true)
+                .text(
+                //'<span style = "color: #313136; font-size:12px;">Global Market Share of <br/> Music Streaming Apps</span>' +
+                '</br><span style="color:#444857; font-size: 10px;"><i>This graph shows what is <br> the most common occupation <br> of all the patient</i></span>'
+                )
+                .position('center')
+                .anchor('center')
+                .hAlign('center')
+                .vAlign('middle');
+            
+            // set the label as the center content
+            chart.center().content(label);
+            
+            // set container id for the chart
+            chart.container('commonOccu');
+            
+            // initiate chart drawing
+            chart.draw();
+        });
+
+        function getRandomColor() {
+            var letters = '0123456789ABCDEF';
+            var color = '#';
+            for (var i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+    </script>
+    
+    <script>
+        anychart.onDocumentReady(function () {
+            // Common Eye Problem
+            console.log('{{ eyeCasesHist_json|safe }}');
+            
+            // Directly injecting the JSON string and parsing it
+            var eyeProbList = JSON.parse('{{ eyeCasesHist_json|safe }}');
+    
+            // Transforming the object into an array format that AnyChart can understand
+            var data = [];
+            for (var problem in eyeProbList) {
+                data.push({x: problem, value: eyeProbList[problem]});
+            }
+    
+            // Proceed with creating the chart using the 'data' array
+            var chart = anychart.pie(data);
+            
+            // set the chart radius making a donut chart
+            chart.innerRadius('55%');
+    
+            // create a color palette
+            var palette = anychart.palettes.distinctColors();
+           
+            // set the colors according to the brands
+            /*
+            palette.items([
+                { color: '#471c18' },
+                { color: '#f6d696' },
+                { color: '#e58442' },
+                { color: '#f0b66b' },
+                { color: '#465s1d' },
+                { color: '#cs4d6f' },
+                { color: '#00sqd2' },
+                { color: '#14fs6a' },
+                { color: '#1cs666' },
+                { color: '#45s6ds' },
+                { color: '#caedaa' },
+                { color: '#4c6s4f' },
+                { color: '#cb5d18' },
+                { color: '#9c5936' }
+            ]);
+            */
+
+            data.forEach(function(item, index) {
+                palette.items().push({ color: getRandomColor() }); // You can replace getRandomColor() with your color selection logic
+            });
+          
+          
+            // apply the donut chart color palette
+            chart.palette(palette);
+            
+            // set the position of labels
+            chart.labels().useHtml(true).format('<span style="color: #000;">{%x} — {%PercentValue}  %</span>');
+    
+            // enable the legend and position it
+            chart.legend().enabled(true).positionMode('outside');
+    
+            // format the donut chart tooltip
+            chart.tooltip().format('Percentage: {%PercentValue}%');
+            
+            // set container id for the chart
+            chart.container('commonCases');
+            
+            // initiate chart drawing
+            chart.draw();
+        });
+
+        function getRandomColor() {
+            var letters = '0123456789ABCDEF';
+            var color = '#';
+            for (var i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+    </script>
+
+    <script>
+        // Age Distribution Chart
+        
+        /* */
+            var ages = {{ ages|safe }};
+            var bins = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50];
+        
+            var ageDistributionData = {
+                labels: bins.map(function (bin, index) {
+                    return index === bins.length - 1 ? bin + '+' : bin + '-' + bins[index + 1];
+                }),
+                datasets: [{
+                    label: 'Age Distribution',
+                    data: bins.map(function (bin, index) {
+                        return ages.filter(function (age) {
+                            return index === bins.length - 1 ? age >= bin : age >= bin && age < bins[index + 1];
+                        }).length;
+                    }),
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            };
+        
+            var ctx2 = document.getElementById('ageChart').getContext('2d');
+            var ageChart = new Chart(ctx2, {
+                type: 'bar',
+                data: ageDistributionData,
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    },
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+        //
+
+    </script>
+   
+    <script>
+        // Patient's Habit over the year
+            var months = {{ all_months|safe }};
+            var dataSmoking = {{ y_axis_Smoking|safe }};
+            var dataAlcohol = {{ y_axis_Alcohol|safe }};
+        
+            var patientHabit = {
+                labels: months,
+                datasets: [ 
+                        
+                {
+                    label: "Smoking",
+                    data: dataSmoking,
+                    backgroundColor: 'rgb(224,123,57)',
+                    borderColor: 'rgb(224,123,57)',
+                    borderWidth: 1
+                },
+                /*       */
+                {
+                    label: "Alcohol",
+                    data: dataAlcohol,
+                    backgroundColor: 'rgba(100, 20, 126, 0.2)',
+                    borderColor: 'rgba(100, 20, 126, 1)',
+                    borderWidth: 1
+                }, 
+                
+                ]
+            };
+            
+            var ctx1 = document.getElementById('patientHabit').getContext('2d');
+        
+            var patientHabit = new Chart(ctx1, {
+                type: 'line',
+                data: patientHabit,
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    },
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+        //
+
+        // Monthly Appointments Chart
+            var months = {{ all_months|safe }};
+            var counts = {{ y_axis|safe }};
+        
+            var monthlyAppointmentsData = {
+                labels: months,
+                datasets: [{
+                    label: 'Monthly Appointments',
+                    data: counts,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                },]
+            };       
+        
+            var ctx1 = document.getElementById('monthlyAppointmentsChart').getContext('2d');
+        
+            var monthlyAppointmentsChart = new Chart(ctx1, {
+                type: 'line',
+                data: monthlyAppointmentsData,
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    },
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+        //
+    
+        // Address Counts Chart
+            var addressCountsData = {{ address_counts|safe }};
+            var addresses = Object.keys(addressCountsData);
+            var counts = Object.values(addressCountsData);
+
+            console.log(counts)
+
+            var addressCountsChartData = {
+                labels: addresses,
+                datasets: [{
+                    label: 'Baranggay',
+                    data: counts,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            };
+
+            var ctx3 = document.getElementById('patientPlaces').getContext('2d');
+            var addressCountsChart = new Chart(ctx3, {
+                type: 'bar',
+                data: addressCountsChartData,
+                options: {
+                    indexAxis: 'y',
+                    scales: {
+                        x: {
+                            type: 'linear',
+                            max: Math.max(...counts) // Set the maximum value of x-axis to the maximum value in counts array
+                        },
+                        y: {
+                            beginAtZero: true
+                        }
+                    },
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                title: function (context) {
+                                    return addresses[context[0].dataIndex];
+                                },
+                                /*
+                                label: function (context) {
+                                    return 'Count: ' + context.parsed.y;
+                                }
+                                */
+                            }
+                        }
+                    }
+                }
+            });
+        //
+        
+
+    </script>
+
+    <script>    
+        // Most Common Patient Allergies
+            var allergi = {{ allAllergies|safe }};
+    
+            console.log
+    
+            var recordedAllergy = {
+                labels: Object.keys(allergi), // Assuming the keys of 'allergi' are the labels
+                datasets: [{
+                    label: 'Allergies Count',
+                    data: Object.values(allergi), // Assuming the values of 'allergi' are the data points
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            };       
+            
+            var ctx1 = document.getElementById('patientAllergies').getContext('2d');
+            
+            var patientAllergies = new Chart(ctx1, {
+                type: 'bar', // Changed type to 'bar'
+                data: recordedAllergy,
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Allergy Count' // Y-axis title
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Allergy' // X-axis title
+                            }
+                        }
+                    },
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+        //
+
+    </script>
+
+</body>
+</html>

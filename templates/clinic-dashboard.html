@@ -1,0 +1,1025 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel = 'stylesheet' href = {% static 'sb-admin-2.min.css' %}>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.bundle.min.js"></script>
+    <!-- Bootstrap JS, including Popper.js for Bootstrap 4 or just Bootstrap Bundle JS for Bootstrap 5 -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <title>Dashboard</title>
+
+    <!-- Custom fonts for this template-->
+    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+
+
+    <style>        
+        .inner-box {
+          border: 1px solid #ddd;
+          padding: 15px;
+          margin-top: 10px;
+          color: black
+        }
+    
+        /* Style for buttons */
+        .button {
+          display: inline-block;
+          padding: 8px 15px;
+          margin-right: 10px;
+          cursor: pointer;
+          border: none;
+          border-radius: 20px;
+        }
+
+        #accept_btn{
+          background-color: #4CAF50;
+          color: black;
+
+        }
+
+        #decline_btn{
+          background-color: #ff0000;
+          color: white;
+
+        }
+
+        #appointments-container {
+            max-height: 808px; /* Set the maximum height according to your design */
+            overflow-y: auto; /* Enable vertical scrollbar when content exceeds the height */
+        }
+
+        #today-appointments-container {
+            max-height: 250px; /* Set the maximum height according to your design */
+            overflow-y: auto; /* Enable vertical scrollbar when content exceeds the height */
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            {% comment %} margin-top: 20px;  {% endcomment %}
+          }
+        
+          th, td {
+            padding: 10px;  /* Add padding to th and td for spacing */
+            text-align: center;
+            {% comment %} border: 1px solid #ddd; {% endcomment %}
+          }
+
+        ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        {% comment %} background-color: #333; {% endcomment %}
+        }
+        
+        .head-nav {
+        float: left;
+        }
+        
+        .head-nav a {
+        display: block;
+        color: Gray;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+        }
+        
+        .head-nav a:hover {
+        background-color: #3e64d3;
+        color: white;
+        }
+
+        {% comment %} Pop up {% endcomment %}
+        .open-button {
+            background-color: #555;
+            color: white;
+            padding: 16px 20px;
+            border: none;
+            cursor: pointer;
+            opacity: 0.8;
+            position: absolute;
+            bottom: 23px;
+            right: 28px;
+            width: 280px;
+          }
+          
+          /* The popup form - hidden by default */
+          .form-popup {
+            display: none;
+            position: absolute;
+            bottom: 0;
+            right: 15px;
+            border: 3px solid #f1f1f1;
+            z-index: 9;
+          }
+          
+          /* Add styles to the form container */
+          .form-container {
+            max-width: 300px;
+            padding: 10px;
+            background-color: white;
+          }
+          
+          /* Full-width input fields */
+          .form-container input[type=text], .form-container input[type=password] {
+            width: 100%;
+            padding: 15px;
+            margin: 5px 0 22px 0;
+            border: none;
+            background: #f1f1f1;
+          }
+          
+          /* When the inputs get focus, do something */
+          .form-container input[type=text]:focus, .form-container input[type=password]:focus {
+            background-color: #ddd;
+            outline: none;
+          }
+          
+          /* Set a style for the submit/login button */
+          .form-container .btn {
+            background-color: #04AA6D;
+            color: white;
+            padding: 16px 20px;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            margin-bottom:10px;
+            opacity: 0.8;
+          }
+          
+          /* Add a red background color to the cancel button */
+          .form-container .cancel {
+            background-color: red;
+          }
+          
+          /* Add some hover effects to buttons */
+          .form-container .btn:hover, .open-button:hover {
+            opacity: 1;
+          }
+
+          a {
+            color: inherit;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: none;
+            color: inherit;
+        }
+
+    </style>
+
+    </head>
+
+<body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+            <!-- Sidebar - Brand -->
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{% url 'index'%}">
+                <div class="sidebar-brand-icon rotate-n-15">
+                    <i class="fas fa-laugh-wink"></i>
+                </div>
+                <div class="sidebar-brand-text mx-3">EyeLuc </div>
+            </a>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider"> <!-- Ito yung parang may dash -->
+
+            <li class="nav-item active">
+                <a class="nav-link" href="{%url 'dashboard' %}">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Dashboard</span></a>
+            </li>
+
+            {% comment %} ILALAGAY NA LANG ITO DUN SA CLINICAL Statistics
+            <li class="nav-item active"> 
+                <a class="nav-link" href="">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Feedback</span></a>
+            </li> {% endcomment %}
+
+            <hr class="sidebar-divider">
+
+            <li class="nav-item active">
+                <a class="nav-link" href="">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Facebook Pages</span></a>
+            </li>
+
+            <hr class="sidebar-divider">
+
+            <li class="nav-item active">
+                <a class="nav-link" href="{%url 'clinic_services' %}">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Services</span></a>
+            </li>
+            
+            <hr class="sidebar-divider">
+
+            <li class="nav-item active">
+                <a class="nav-link" href="{%url 'clinic_dashboard_profile' %}">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Profile</span></a>
+            </li>
+            
+            <hr class="sidebar-divider">
+
+            <li class="nav-item active">
+                <a class="nav-link" href="{%url 'clinic_patintTables' %}"> 
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Table</span></a> <!-- Dito nakalagay yung mga current at past na naging patient -->
+            </li>
+            
+            <hr class="sidebar-divider">
+
+            <li class="nav-item active">
+                <a class="nav-link" href="{%url 'clinic_messages' %}"> 
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Messages</span></a> 
+            </li>
+            
+            <hr class="sidebar-divider">
+            
+            <!-- Sidebar Toggler (Sidebar) -->
+            <div class="text-center d-none d-md-inline">
+                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+            </div>
+        </ul>
+        <!-- End of Sidebar -->        
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                    {% comment %} <h3>{{ clinic_name }}</h3>  <!-- For Debugging Only --> {% endcomment %}
+                    <ul>
+                        <li class = "head-nav"><a href="{%url 'dashboard' %}">General</a></li>
+                        {% comment %} <li class = "head-nav"><a href="{%url 'clinic_dashboard_notes' %}">Clinical Notes</a></li> {% endcomment %}
+                        <li class = "head-nav"><a href="{%url 'clinic_dashboard_Stats' %}">Clinical Statistics</a></li> <!-- Nakalagay dito yung Monthly statistics kung ilang patient ang nag papa appoint sa kanila, kung sinong patient ang kadalasan nag papa appoint, at yung ratings pa pala, shittt -->
+                        <li class = "head-nav"><a href="{%url 'clinic_dashboard_walkInForm' %}">Walk In</a></li>
+                        {% comment %} <li><a href="#about">About</a></li> {% endcomment %}
+                    </ul>
+                    
+                    <!-- Topbar Navbar -->
+                    <ul class="navbar-nav ml-auto">
+                                               
+                        <!-- Nav Item - User Information -->
+                        <li class="nav-item dropdown no-arrow">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Name of the Client</span>
+                                <img class="img-profile rounded-circle"
+                                    src="img/undraw_profile.svg">
+                            </a>
+                            <!-- Dropdown - User Information -->
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                aria-labelledby="userDropdown">
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Profile
+                                </a>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Settings
+                                </a>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Activity Log
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Logout
+                                </a>
+                            </div>
+                        </li>
+                    </ul>
+                </nav>
+                <!-- End of Topbar -->
+
+                {% comment %} <div aria-live="polite" aria-atomic="true" class="toast-container" style="position: relative; min-height: 200px;"> {% endcomment %}
+                <div aria-live="polite" aria-atomic="true"class="toast-container" style="position: fixed; top: 50px; right: 50px; min-height: 200px; z-index: 1050;">
+                    <!-- Toasts will be dynamically added here by the JavaScript -->
+                </div>  
+
+                {% if messages %}
+                    <script>
+                        {% for message in messages %}
+                        alert("{{ message }}");
+                        {% endfor %}
+                    </script>
+                {% endif %}
+                
+                <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                    <a type="button" href="{%url 'logout'%}"><button>Log Out</button></a> <br>
+                </div>
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    <!-- Page Heading -->
+                    <div class="col-xl-15 col-lg-15">
+                        <div class="card shadow mb-4">
+                            <div
+                                class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                <h6 class="m-0 font-weight-bold text-primary">Clinic Overview</h6>
+                                <!-- The dropdown are deleted -->
+                            </div>
+
+                            <div class="card-body" id="overview-container"><!-- the length should have a limit and can have a scrool bar for other -->
+                                <table>
+                                    <tr>
+                                        <th>Total Appointment</th>
+                                        <th>This Month Appointment</th>
+                                        <th>Today's Appointment</th>
+                                        <th>Next Appointment at</th>
+                                        
+                                    </tr>
+                                    <tr>
+                                        <td><h2>{{ total_appointments }}</h2></td>
+                                        <td><h2>{{ month_appointments_count }}</h2></td>
+                                        <td><h2>{{ today_appointments_count }}</h2></td>
+                                        <td><h4>{{ next_appointment_time }}</h4></td>
+                                        
+                                    </tr>
+                                    <tr>
+                                        <td><h2></h2></td>
+                                        <td><h2></h2></td>
+                                        <td><p>{{ done_Todays_appointment }} done, {{ pending_Todays_appointment }} pending</p></td>
+                                        <td><h2></h2></td>                                            
+                                    </tr>
+                                    </table>                                    
+                            </div>
+                        </div>
+                    </div>
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ CALENDAR ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+                 {% comment %} <form id="appointmentForm" method="post" > {% endcomment %}
+                    <form id="appointmentForm" method="post" novalidate>
+                        {% csrf_token %}
+
+                        <!-- Content Row -->
+                        <div class="row">
+
+                            <!-- Area Chart -->
+                            <div class="col-xl-8 col-lg-7">
+                                <!-- Dito ilalagay yung sa calendar -->
+                                <!-- So maybe dapat nasa form lahat sila? -->
+                                <div class="card shadow mb-4"> 
+                                    <div class="card-body">
+                                        <div id='calendar'></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Dito ilalagay yung patients request -->
+                            <div class="col-xl-4 col-lg-5">
+                                <div class="card shadow mb-4">
+                                    <!-- Card Header - Dropdown -->
+                                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                        <h6 class="m-0 font-weight-bold text-primary">Patient/Appointment Request</h6>
+
+                                        <div class="dropdown no-arrow">
+                                            <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                            </a>
+                                            <p>Dropdown ito hindi lang gumagana</p>
+                                            
+                                            <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                                                aria-labelledby="dropdownMenuLink">
+                                                <div class="dropdown-header">Dropdown Header:</div>
+                                                <a class="dropdown-item" href="#">Accept All</a>
+                                                <a class="dropdown-item" href="#">Denied All</a>
+                                                <div class="dropdown-divider"></div>
+                                                <a class="dropdown-item" href="#">Something else here</a>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <!-- Card Body -->
+                                    {% comment %} <form id="appointmentForm" method="post" >
+                                        {% csrf_token %} {% endcomment %}
+                                    <div class="card-body" id="appointments-container"><!-- the length should have a limit and can have a scrool bar for other -->
+                                        {% for appointment in appointments %}
+                                            <div class="inner-box" id="appointment_{{ appointment.bookingID }}" >                                             
+                                                <h4 >{{ appointment.userID }}</h4>
+                                                <h5>Service Requested : {{ appointment.serviceID.service_Name }}</h5> <!-- user Service request -->
+                                                <p>Requesting Schedule on : {{ appointment.appoint_Date }} at {{ appointment.appt_Start_Time }} </p> 
+                                                <a class="button" href="/view_Profile/{{ appointment.bookingID }}/" >View Profile</a>
+                                                <button class="button accept-btn" id = "accept_btn"   data-booking-id="{{ appointment.bookingID }}">Accept</button>
+                                                <button class="button decline-btn" id = "decline_btn"  data-booking-id=" {{ appointment.bookingID }}">Decline</button>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                    {% comment %} </form> {% endcomment %}
+                                </div>
+                            </div>
+                        </div> 
+
+
+
+                        {% comment %} </form> {% endcomment %}
+
+                        <!-- Content Row -->
+                        <div class="row">
+                            <!-- Content Column -->
+                            <div class="col-lg-6 mb-4">
+                                <!-- Dito ilalagay yung mga naka schedule sa current date together with its note -->
+                                <div class="card shadow mb-4">
+                                    <div class="card-header py-3">
+                                        <h6 class="m-0 font-weight-bold text-primary">Today's Schedule</h6>
+                                    </div>
+
+                                    <div class="card-body" id="today-appointments-container">
+                                        {% for todays_appointment in todays_appointment %}  <!-- This is working, but it does not shows pu because of the boolean hidin is true -->
+                                            <div class="inner-box" id="appointment_{{ todays_appointment.bookingID }}" >                                             
+                                                <h4 >{{ todays_appointment.userID }}</h4>
+                                                <h5>Service Acquire : {{ todays_appointment.serviceID.service_Name }}</h5> <!-- user Service request -->
+                                                <p>Scheduled on : {{ todays_appointment.appt_Start_Time }}</p> 
+                                                <p>{{ todays_appointment.bookingID }} </p>
+                                                <!-- Once the Client accept the request, the request should be hidden and can be displayed on the calendar -->
+                                                <button class="button sesion-btn" id = "sesion_btn"   sesion-booking-id="{{ todays_appointment.bookingID }}">End Consultation</button>
+                                                <button class="button cancel-btn" id = "cancel_btn"   sesion-booking-id="{{ todays_appointment.bookingID }}">Cancel Consultation</button>
+                                                {% comment %} <button class="button view-btn" id = "view_Patient"   sesion-booking-id="{{ todays_appointment.bookingID }}">View Patient Profile</button> {% endcomment %}
+                                                {% comment %} <button class="button view-btn" id = "view_Patient"   sesion-booking-id="{{ todays_appointment.bookingID }}">View Patient Profile</button> {% endcomment %}
+                                                <button class="button"><a  href="/view_Profile{{ todays_appointment.bookingID }}/" class="button view-btn" >  View Patient Profile  </a></button>
+                                                <button class="button"><a  href="/dataSheet/{{ todays_appointment.bookingID }}/" class="button view-btn" >  Enter Record  </a></button>
+                                                <button class="button move-btn" id="move_btn" onclick="openForm('{{ todays_appointment.bookingID }}', event)" sesion-booking-id="{{ todays_appointment.bookingID }}">Reschedule Appointment</button>
+                                                    
+                                                    {% comment %} {% for todays_appointment in todays_appointment %}  {% endcomment %}
+                                                        <!-- This should be loop that is based on the Patient ID -->
+                                                        <div class="form-popup" id="myForm_{{ todays_appointment.bookingID }}">                                                        
+                                                            <div class="form-container" id="moveForm_{{ todays_appointment.bookingID }}">
+                                                                <p>{{ todays_appointment.userID }} </p>
+                                                                <p>{{ todays_appointment.serviceID.service_Name }} </p>
+
+
+                                                                <h3>Reschedule Appointment</h3> <!-- KAILANGAN NA MA ISAVE RIN ITO DUN SA DB, OR NEED MAPALTAN -->
+
+                                                                <!-- Need ko ng new DB para dun sa Previous Schedule -->
+                                                                <!-- Kailangan sa Table ay merong "Appointment moved from //date to //date" -->
+                                                                <div class="fs-3 fw-light text-muted">
+                                                                    <label for="new_date">Select Date First</label>
+                                                                    <!-- Dapat naka if statement dito. Kung yung current clinic ay may bakanteng oras sa ganun, etc. -->
+                                                                    <input type="date" id="new_date" name="new_date" class="form-control ">
+
+                                                                    <p>{{ todays_appointment.bookingID }} </p>
+
+                                                                </div>
+                                                                    
+                                                                <div class="fs-3 fw-light text-muted">
+                                                                    <label for="time">Time</label>
+                                                                    <select name="time" id="time" name="time" class="form-control time"> 
+                                                                        <!-- JavaScript will populate the options dynamically -->
+                                                                    </select>
+                                                                </div>
+                                                            
+                                                                <label><b>Notes</b></label>
+                                                                <input type="text" placeholder="Enter Reason of movements" name="notes" id="notes" >  <!-- nag aauto refresh pag hindi naka required -->
+                                                            
+                                                                <button type="button" class="btn done" id="doneButton" onclick="doneForm()">Done</button>
+                                                                
+                                                                <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
+                                                            </div>                                                          
+                                                        </div>
+                                                    {% comment %} {% endfor %} {% endcomment %}
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>                                                       
+                            </div>
+                    </form>
+                    
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ USER'S NOTE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+                            <div class="col-lg-6 mb-4">                            
+                                <!-- Puwede yung notes dito? -->
+                                <!-- Illustrations -->
+                                <div class="card shadow mb-4">
+                                    <div class="card-header py-3">
+                                        <h6 class="m-0 font-weight-bold text-primary">Notes</h6>
+                                    </div>
+                                    <div class="card-body" id="today-appointments-container">
+                                        {% for todays_appointment in todays_appointment %}  <!-- This is working, but it does not shows pu because of the boolean hidin is true -->
+                                            <div class="inner-box" id="appointment_{{ todays_appointment.bookingID }}" >    <!-- SUBJECT TO CHANGE -->                                         
+                                                <h4 >{{ todays_appointment.userID }}</h4>
+                                                {% comment %} <h5>Service Requested : {{ todays_appointment.serviceID.service_Name }}</h5> <!-- user Service request --> {% endcomment %}
+                                                <p>Notes : {{ todays_appointment.notes }}</p> 
+                                                <!-- Once the Client accept the request, the request should be hidden and can be displayed on the calendar -->
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>    
+                            </div>
+                        </div>
+                    {% comment %} </form> {% endcomment %}
+    <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ USER'S NOTE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ TODAY'S SCHEDULE ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+                </div>
+                <!-- /.container-fluid -->
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright &copy; Your Website 2021</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper --> 
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">X</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <script type="text/javascript">
+        var createMessageUrl = "{% url 'viewRoom' %}";
+    </script>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="{% static 'notificationClinic.js' %}"></script>          
+
+    <script defer>
+    var clinicId = {{ clinic.clinicID }};
+    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Patient/Appointment Management       
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const appointmentForm = document.getElementById('appointmentForm');
+            const acceptButtons = document.querySelectorAll('.accept-btn');
+            const declineButtons = document.querySelectorAll('.decline-btn');
+            const sessionButtons = document.querySelectorAll('.sesion-btn, .cancel-btn');
+
+            appointmentForm.addEventListener('click', function (event) {   
+                const target = event.target;     
+
+                if (target.classList.contains('accept-btn') || target.classList.contains('decline-btn')) {
+                    event.preventDefault();
+                    const appointmentElement = target.closest('[id^="appointment_"]');
+                    
+                    console.log('TEST A ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ A');
+                    // NEED TO CREATE A CANCELATION REASON NOTES FOR OPTHAL AND PATIENT
+                    if (appointmentElement) {
+                        console.log('TEST B ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ B');
+                        const bookingId = target.getAttribute('data-booking-id');
+                        updateBookingStatus(bookingId, target.classList.contains('accept-btn') ? 'accept' : 'decline', appointmentElement);
+                        appointmentElement.style.display = 'none';
+                    } else {
+                        console.log('TEST C ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ C');
+                        console.error('Parent element not found for button:', target);
+                    }
+                    event.stopPropagation();
+                } else if (target.classList.contains('sesion-btn') || target.classList.contains('cancel-btn')) {
+                    event.preventDefault();
+    
+                    const appointmentElement = target.closest('[id^="appointment_"]');
+    
+                    if (appointmentElement) {
+                        const bookingId = target.getAttribute('sesion-booking-id');
+                        const action = target.classList.contains('sesion-btn') ? 'end_session' : 'cancel_session';
+    
+                        updateSessionStatus(bookingId, action, appointmentElement);
+                    } else {
+                        console.error('Parent element not found for button:', target);
+                    }
+                    event.stopPropagation();
+                } 
+            });
+
+
+            function updateBookingStatus(bookingId, status, appointmentElement) {
+                console.log('Updating booking status...');
+                const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+                // const appointmentElement = document.getElementById(`appointment_${bookingId}`); // kahit nandito ito, naka null pa rin
+                console.log('CSRF Token:', csrfToken);                
+            
+                const url = '/update_booking_status/';
+                console.log('CSRF Token Before Fetch:', csrfToken);
+            
+                const payload = {
+                    bookingId: bookingId,
+                    status: status,
+                };
+            
+                console.log('Request Payload:', payload);
+            
+                fetch(url, { 
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken,
+                        'X-Requested-With': 'XMLHttpRequest',
+                    },
+                    body: JSON.stringify(payload),
+                })
+                .then(function(response) {
+                    return response.json();
+                })
+
+                .then(function(data) {
+                    console.log('Response:', data);
+                    console.log('Attempting to find element:', `appointment_${bookingId}`);
+                    const appointmentElement = document.getElementById(`appointment_${bookingId}`);
+                    
+                    if (appointmentElement) { // PAG NAKA DENIEND, NULL ANG VALUE N'YA, ALTHOUGH NAKA PRINT S'YA
+                        console.log('TEST ONE --------------------------- 1');
+                        console.log('Element found:', `appointment_${bookingId}`);
+                        //appointmentElement.style.display = 'none';                        
+                        appointmentElement.style.display = data.is_hidden ? 'none' : 'block';
+                    } else {
+                        console.log('TEST TWO --------------------------- 2');
+                        console.log('appointmentElement --------------------------- ', appointmentElement); // SO BAKIT NULL KA?
+
+                        console.error('Element not found:', `appointment_${bookingId}`);
+                    } // since wala pa namang epekto ito, balikan na lang muna kita
+                
+                    if (data.success) {
+                        console.log('TEST Three --------------------------- 3');
+                        // Handle success if needed
+                    } else {
+                        console.error('Failed to update booking status');
+                    }
+                })
+                .catch(function(error) {
+                    console.error('Error:', error);
+                });
+            }
+        });
+
+        function updateSessionStatus(bookingId, action, appointmentElement) {
+            console.log(`Updating session status for booking ${bookingId}...`);
+
+            const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+            const url = '/update_session_status/';
+
+            const payload = {
+                bookingId: bookingId,
+                action: action,
+            };
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken,
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+                body: JSON.stringify(payload),
+            })
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (data) {
+                    console.log('TEST ONEEEEEEEE');
+                    console.log('Response:', data);
+
+                if (appointmentElement) {
+                    console.log('TEST TWOOOOOOOO');
+                    appointmentElement.style.display = data.is_hidden ? 'none' : 'block';
+                } else {
+                    console.log('TEST THREEEEEE');
+                    console.error('Element not found:', `appointment_${bookingId}`);
+                }
+
+                if (data.success) {
+                    console.error('TEST FOUUUUUUUUUR');
+                    // Handle success if needed
+                } else {
+                    console.error('Failed to update session status');
+                }
+            })
+            .catch(function (error) {
+                console.error('Error:', error);
+            });
+        }
+        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ENd Patient/Appointment Management
+
+        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ CALENDAR
+        function getCookie(name) {
+                    var cookieValue = null;
+                    if (document.cookie && document.cookie !== '') {
+                        var cookies = document.cookie.split(';');
+                        for (var i = 0; i < cookies.length; i++) {
+                            var cookie = cookies[i].trim();
+                            // Does this cookie string begin with the name we want?
+                            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                break;
+                            }
+                        }
+                    }
+                    return cookieValue;
+                }
+
+         //   
+        document.addEventListener('DOMContentLoaded', function() {
+          var csrfToken = "{{ csrf_token }}";
+          var calendarEl = document.getElementById('calendar');
+      
+           // Get the current date
+          var currentDate = new Date();
+
+          // Format the date as 'YYYY-MM-DD'
+          var formattedDate = currentDate.toISOString().slice(0, 10);
+
+
+          var calendar = new FullCalendar.Calendar(calendarEl, {
+            headerToolbar: {
+              left: 'prev,next today',
+              center: 'title',
+              right: 'dayGridMonth,timeGridWeek,timeGridDay'
+            },
+
+            initialDate: formattedDate,
+
+            navLinks: true, // can click day/week names to navigate views
+            selectable: true,
+            selectMirror: true,
+
+            select: function(arg) {
+                var title = prompt('Event Title:');
+                if (title) {
+                    calendar.addEvent({
+                        title: title,
+                        start: arg.start,
+                        end: arg.end,
+                        allDay: arg.allDay
+                    });
+            
+                    // bakit hindi lumalabas yung calendar? hmmm
+                    var data_toSend = {
+                        appt_title: title,
+                        appt_start: arg.start.toISOString(),
+                        appt_end: arg.end.toISOString(),
+                        appt_allDay: arg.allDay,
+                        csrfmiddlewaretoken: csrfToken
+                    };
+                    
+            
+                    fetch('/save_event/', {
+                        method: 'POST',  
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': csrfToken
+                        },
+                        body: JSON.stringify(data_toSend)
+                    })
+
+                    .then(response => response.json())
+                    .then(data => console.log(data))
+                    .catch(error => console.error('Error:', error));
+                }
+                calendar.unselect();
+            },
+
+            eventClick: function(arg) {
+
+              var userChoice = confirm("Please choose an action:\n\nPatient [name] are Scheduled on [date and time]. \nView Patient Profile");
+
+              
+              if (userChoice) {
+                var bookingID = arg.event.extendedProps.bookingID;
+
+                var url = "/view_Profile/" + bookingID + "/";
+
+                //console.log("selected bookingID: ", bookingID)
+                //alert("selected bookingID: " + bookingID)
+
+                console.log ("Running...")
+
+                window.location.href = url;
+              }             
+
+            },
+
+            editable: true,
+            dayMaxEvents: true, // allow "more" link when too many events
+
+            events: '/get_events/' + clinicId + '/', 
+          });
+
+          console.log('Clinic ID:', clinicId);
+          
+
+          calendar.render();
+        });
+        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ END CALENDAR    
+
+        
+        // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Move Appointment  
+    document.addEventListener('DOMContentLoaded', function () {
+        // Assuming each form has an ID starting with 'moveForm_'
+        var forms = document.querySelectorAll('[id^="moveForm_"]');
+
+        forms.forEach(function (form) {
+            var dateInput = form.querySelector('.form-control');
+            var timeSelect = form.querySelector('.form-control.time');
+
+            if (dateInput) {
+                dateInput.addEventListener('input', function () {
+                    var selectedDate = new Date(this.value);
+                    var currentDate = new Date();
+
+                    if (selectedDate < currentDate) {
+                        //console.log("DATE===Booking ID: ", currentBookingID); // DEBUGGING PURPOSE
+                        alert('Please select a future date.');                        
+                        this.value = ''; // Clear the input field if the date is invalid
+                        return;
+                    }
+
+                    // If the date is valid, generate time options based on the selected date
+                    generateTimeOptions(timeSelect, selectedDate);
+                });
+            } else {
+                console.error("Date input element not found in the form:", form);
+            }
+        });
+    });
+
+    // Function to generate time options dynamically based on the selected date
+    function generateTimeOptions(selectElement, selectedDate) {
+        console.log("Generating time options...");
+
+        // Clear existing options
+        selectElement.innerHTML = '';
+
+        // Set start and end times based on the selected date
+        var startTime = 7;
+        var endTime = 17;
+        
+
+        // For demonstration purposes, let's assume that times after 12 PM are not available on weekends
+        if (selectedDate.getDay() === 0 || selectedDate.getDay() === 6) {
+            endTime = 12;
+        }
+
+        // Generate options
+        for (var i = startTime; i < endTime; i++) {
+            var option = document.createElement('option');
+            option.value = i.toString().padStart(2, '0') + ':00';
+            var endTimeString = (i + 1).toString().padStart(2, '0') + ':00';
+            option.text = `${i}:00 - ${endTimeString}`;
+            selectElement.appendChild(option);
+        }
+    }
+
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    var currentFormElement;
+    var currentBookingID;
+    
+    function openForm(bookingID, event) {
+        event.preventDefault(); // Prevent default form submission behavior
+
+        var formId = `myForm_${bookingID}`;
+        var formElement = document.getElementById(formId);
+
+        if (formElement) {
+            formElement.style.display = "block";
+            currentFormElement = formElement;
+            currentBookingID = bookingID;
+    
+            //console.log("OPEN Booking ID : ", bookingID);
+            console.log("CURRENT Booking ID : ", currentBookingID);
+        } else {
+            console.error(`Form element with ID ${formId} not found.`);
+        }
+    } 
+    
+    function doneForm() {
+        console.log("Done Form Function ~~~~~~~~~~~~~~~");
+    
+        // Use the passed bookingID and formElement here
+    
+        // Create a new FormData instance with the form element
+        //var formId = `myForm_${currentBookingID}`;
+        var formId = "appointmentForm";
+        var formElement = document.getElementById(formId);
+
+
+        console.log("DONE FORM formElement ID : ", formElement);
+
+        if (!formElement) {
+            console.error('Form element not found');
+            return;
+        }
+
+        var formData = new FormData(formElement);
+
+        console.log("DONE FORM Booking ID : ", formId);
+
+
+        formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+    
+        console.log("formData: = ",formData);
+        // Use the fetch API to send a POST request
+        fetch(`/move_appointment/${currentBookingID}/`, {
+            method: 'POST',
+            headers: {
+                //'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken'),
+                // Add any other headers if needed
+            },
+
+            body: formData,
+            
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Handle the response data
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    
+        //document.getElementById("myForm").style.display = "none";
+        document.getElementById("myForm_" + currentBookingID).style.display = "none";
+    }
+
+    function closeForm() {
+        console.log("Close Form Function ~~~~~~~~~~~~~~~");
+    
+        var formId = `myForm_${currentBookingID}`;
+        var formElement = document.getElementById(formId);
+    
+        if (formElement) {
+            formElement.style.display = "none";
+            console.log("CLOSE Booking ID : ", currentBookingID);
+        } else {
+            console.error(`Form element with ID ${formId} not found.`);
+        }
+    }
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ End Move Appointment 
+
+    </script>
+
+    <script src='{% static 'index.global.js' %}'></script>
+
+</body>
+
+</html>

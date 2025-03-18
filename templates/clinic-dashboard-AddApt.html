@@ -1,0 +1,318 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel = 'stylesheet' href = {% static 'sb-admin-2.min.css' %}>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    {% comment %} <script src='{% static 'index.global.js' %}'></script> {% endcomment %}
+    <!-- any changes in the calendar.js does not affect here, why? -->
+    {% comment %} <script src='{% static 'calendar.js' %}'></script> {% endcomment %}
+
+    <title>Walk In</title>
+
+    <!-- Custom fonts for this template-->
+    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+
+
+    <style>        
+        .inner-box {
+          border: 1px solid #ddd;
+          padding: 15px;
+          margin-top: 10px;
+          color: black
+        }
+    
+        /* Style for buttons */
+        .button {
+          display: inline-block;
+          padding: 8px 15px;
+          margin-right: 10px;
+          cursor: pointer;
+          border: none;
+          border-radius: 20px;
+        }
+
+        #accept_btn{
+          background-color: #4CAF50;
+          color: black;
+
+        }
+
+        #decline_btn{
+          background-color: #ff0000;
+          color: white;
+
+        }
+
+        #appointments-container {
+            max-height: 808px; /* Set the maximum height according to your design */
+            overflow-y: auto; /* Enable vertical scrollbar when content exceeds the height */
+        }
+
+        #today-appointments-container {
+            max-height: 250px; /* Set the maximum height according to your design */
+            overflow-y: auto; /* Enable vertical scrollbar when content exceeds the height */
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            {% comment %} margin-top: 20px;  {% endcomment %}
+          }
+        
+          th, td {
+            padding: 10px;  /* Add padding to th and td for spacing */
+            text-align: center;
+            {% comment %} border: 1px solid #ddd; {% endcomment %}
+          }
+
+        ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        {% comment %} background-color: #333; {% endcomment %}
+        }
+        
+        .head-nav {
+        float: left;
+        }
+        
+        .head-nav a {
+        display: block;
+        color: Gray;
+        text-align: center;
+        padding: 14px 16px;
+        text-decoration: none;
+        }
+        
+        .head-nav a:hover {
+        background-color: #3e64d3;
+        color: white;
+        }
+
+      </style>
+
+    </head>
+
+<body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+            <!-- Sidebar - Brand -->
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{% url 'index'%}">
+                <div class="sidebar-brand-icon rotate-n-15">
+                    <i class="fas fa-laugh-wink"></i>
+                </div>
+                <div class="sidebar-brand-text mx-3">EyeLuc </div>
+            </a>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider"> <!-- Ito yung parang may dash -->
+
+            <li class="nav-item active">
+                <a class="nav-link" href="{%url 'dashboard' %}">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Dashboard</span></a>
+            </li>
+
+            <hr class="sidebar-divider">
+
+            <li class="nav-item active">
+                <a class="nav-link" href="">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Facebook Pages</span></a>
+            </li>
+
+            <hr class="sidebar-divider">
+
+            <li class="nav-item active">
+                <a class="nav-link" href="{%url 'clinic_services' %}">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Services</span></a>
+            </li>
+            
+            <hr class="sidebar-divider">
+
+            <li class="nav-item active">
+                <a class="nav-link" href="{%url 'clinic_dashboard_profile' %}">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Profile</span></a>
+            </li>
+            
+            <hr class="sidebar-divider">
+
+            <li class="nav-item active">
+                <a class="nav-link" href="{%url 'clinic_patintTables' %}"> 
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Table</span></a>
+            </li>
+            
+            <hr class="sidebar-divider">
+
+            <li class="nav-item active">
+                <a class="nav-link" href="{%url 'clinic_messages' %}"> 
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Messages</span></a> 
+            </li>
+            
+            <hr class="sidebar-divider">
+            
+            <!-- Sidebar Toggler (Sidebar) -->
+            <div class="text-center d-none d-md-inline">
+                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+            </div>
+        </ul>
+        <!-- End of Sidebar --> 
+
+        
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                    {% comment %} <h3>{{ clinic_name }}</h3>  <!-- For Debugging Only --> {% endcomment %}
+                    <ul>
+                        <li class = "head-nav"><a href="{%url 'dashboard' %}">General</a></li>
+                        {% comment %} <li class = "head-nav"><a href="{%url 'clinic_dash_curS' %}">Current Sesion</a></li> {% endcomment %}
+                        <li class = "head-nav"><a href="{%url 'clinic_dashboard_notes' %}">Clinical Notes</a></li>
+                        <li class = "head-nav"><a href="{%url 'clinic_dashboard_Stats' %}">Clinical Statistics</a></li> <!-- Nakalagay dito yung Monthly statistics kung ilang patient ang nag papa appoint sa kanila, kung sinong patient ang kadalasan nag papa appoint, at yung ratings pa pala, shittt -->
+                        <li class = "head-nav"><a href="{%url 'clinic_dashboard_AddApt' %}">Walk In</a></li>
+                        {% comment %} <li><a href="#about">About</a></li> {% endcomment %}
+                    </ul>
+                    
+                    <!-- Topbar Navbar -->
+                    <ul class="navbar-nav ml-auto">
+                                               
+                        <!-- Nav Item - User Information -->
+                        <li class="nav-item dropdown no-arrow">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Name of the Client</span>
+                                <img class="img-profile rounded-circle"
+                                    src="img/undraw_profile.svg">
+                            </a>
+                            <!-- Dropdown - User Information -->
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                aria-labelledby="userDropdown">
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Profile
+                                </a>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Settings
+                                </a>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Activity Log
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Logout
+                                </a>
+                            </div>
+                        </li>
+                    </ul>
+                </nav>
+                <!-- End of Topbar -->
+
+
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+        <!-- Main Content -->
+        <div id="content">
+            <!-- Begin Page Content -->
+            <div class="container-fluid">
+dapat iba yung DB dito, then bago mag record, need muna i create ng account si naka walk in if wala s;yang account then pag meron naman, dapat ma search yung account n'ya then dapat may something 
+                <!-- Page Heading -->
+                <div class="col-xl-5 col-lg-15">
+                    <div class="card shadow mb-4">
+                        <div
+                            class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                            <h1 class="m-0 font-weight-bold text-primary">Add Appointment</h1>
+                            <!-- The dropdown are deleted -->
+                        </div>
+                        <div class="card-body" id="overview-container"><!-- the length should have a limit and can have a scrool bar for other -->
+                            <h2>Somthing Information here</h2>                               
+                        </div>
+                    </div>
+                </div>
+                
+                
+            </div>
+            <!-- /.container-fluid -->
+        </div>
+        <!-- End of Main Content -->
+
+        <!-- Footer -->
+        <footer class="sticky-footer bg-white">
+            <div class="container my-auto">
+                <div class="copyright text-center my-auto">
+                    <span>Copyright &copy; Your Website 2021</span>
+                </div>
+            </div>
+        </footer>
+        <!-- End of Footer -->
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+
+    </div>
+    <!-- End of Page Wrapper --> 
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">X</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    {% comment %} <script defer src='{% static 'clinic_patient_accpt.js' %}'></script>  {% endcomment %}
+    <script src='{% static 'calendar.js' %}'></script> 
+    <script src='{% static 'index.global.js' %}'></script>
+    <!-- Gumagana naman s'ya pero pag may binago ako dun sa JS hindi na apply -->
+
+</body>
+
+</html>
